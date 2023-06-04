@@ -1,0 +1,22 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style Selector="DataGrid.keyValueDataGrid">
+        <Styles>
+            <Style Selector="DataGridColumnHeader">
+                <Setter Property="FontSize" Value="22"></Setter>
+                <Setter Property="FontWeight" Value="Medium"></Setter>
+            </Style>
+
+            <Style Selector="DataGridCell TextBlock#CellTextBlock">
+                <Setter Property="FontSize" Value="22"></Setter>
+                <Setter Property="FontWeight" Value="Medium"></Setter>
+            </Style>
+
+            <Style Selector="DataGridCell TextBox#CellTextBox">
+                <Setter Property="FontSize" Value="22"></Setter>
+                <Setter Property="FontWeight" Value="Medium"></Setter>
+                <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+            </Style>
+        </Styles>
+    </Style>
+
+</Styles>

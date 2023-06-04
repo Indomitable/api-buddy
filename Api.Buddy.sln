@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Buddy.Main.UI", "Api.Buddy.Main.UI\Api.Buddy.Main.UI.csproj", "{624923D0-A2A9-4942-9823-94B75A5CDC89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Buddy.Main.Logic", "Api.Buddy.Main.Logic\Api.Buddy.Main.Logic.csproj", "{86E48F07-94A7-4A8C-B5AD-144C9D30C6BB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{624923D0-A2A9-4942-9823-94B75A5CDC89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{624923D0-A2A9-4942-9823-94B75A5CDC89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{624923D0-A2A9-4942-9823-94B75A5CDC89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{624923D0-A2A9-4942-9823-94B75A5CDC89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86E48F07-94A7-4A8C-B5AD-144C9D30C6BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86E48F07-94A7-4A8C-B5AD-144C9D30C6BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86E48F07-94A7-4A8C-B5AD-144C9D30C6BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86E48F07-94A7-4A8C-B5AD-144C9D30C6BB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

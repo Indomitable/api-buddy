@@ -1,0 +1,49 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mvvm="clr-namespace:Api.Buddy.Main.UI.MVVM"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Api.Buddy.Main.UI.Controls.Request.RequestHeaders"
+             x:DataType="mvvm:RequestInitViewModel"
+             x:CompileBindings="True">
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal">
+            <Button FontSize="20"
+                    Command="{Binding AddHeader}">Add</Button>
+        </StackPanel>
+        <DataGrid ItemsSource="{Binding Headers}"
+                  Height="300" RowHeight="50" ColumnHeaderHeight="50"
+                  Classes="keyValueDataGrid">
+            <DataGrid.Resources>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="70">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Panel Width="70">
+                                <CheckBox HorizontalAlignment="Center" IsThreeState="False" IsChecked="{Binding Selected}"></CheckBox>
+                            </Panel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Name" Width="350"
+                                    CanUserSort="False"
+                                    Binding="{Binding Path=Name}" />
+                <DataGridTextColumn Header="Value" Width="*"
+                                    CanUserSort="False"
+                                    Binding="{Binding Path=Value}" />
+                <DataGridTemplateColumn Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button HorizontalAlignment="Center"
+                                    FontSize="20"
+                                    Command="{Binding $parent[DataGrid].((mvvm:RequestInitViewModel)DataContext).RemoveHeader}"
+                                    CommandParameter="{Binding .}">Remove</Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </StackPanel>
+</UserControl>
