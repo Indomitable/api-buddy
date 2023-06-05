@@ -43,7 +43,13 @@ public class RequestInitViewModel : ReactiveObject, IRequestInitViewModel
 
     public void AddHeader()
     {
-        Headers.Add(new Header(Headers.Count, string.Empty, string.Empty));
+        Headers.Add(new Header
+        {
+            Index = Headers.Count,
+            Name = string.Empty,
+            Value = string.Empty,
+            Selected = true
+        });
     }
 
     public void RemoveHeader(Header header)

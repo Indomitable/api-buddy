@@ -19,7 +19,10 @@ public sealed class RequestInit
             .OrderBy(q => q.Index)
             .Select(q => $"{HttpUtility.UrlEncode(q.Name)}={HttpUtility.UrlEncode(q.Value)}");
         var query = string.Join('&', parameters);
-
+        if (string.IsNullOrEmpty(query))
+        {
+            return new Uri(Url);
+        }
         return new Uri($"{Url}?{query}");
     }
 }

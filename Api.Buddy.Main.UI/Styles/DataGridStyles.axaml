@@ -6,15 +6,18 @@
                 <Setter Property="FontWeight" Value="Medium"></Setter>
             </Style>
 
-            <Style Selector="DataGridCell TextBlock#CellTextBlock">
+            <Style Selector="DataGridCell TextBlock.keyValueDataGrid__textCell">
                 <Setter Property="FontSize" Value="22"></Setter>
                 <Setter Property="FontWeight" Value="Medium"></Setter>
+                <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                <Setter Property="Padding" Value="5 0" />
             </Style>
 
-            <Style Selector="DataGridCell TextBox#CellTextBox">
+            <Style Selector="DataGridCell TextBox.keyValueDataGrid__textEditCell">
                 <Setter Property="FontSize" Value="22"></Setter>
                 <Setter Property="FontWeight" Value="Medium"></Setter>
                 <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                <Setter Property="Padding" Value="8 0" />
             </Style>
         </Styles>
     </Style>
