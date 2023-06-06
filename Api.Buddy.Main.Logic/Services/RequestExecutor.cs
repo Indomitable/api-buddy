@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Api.Buddy.Main.Logic.Extensions;
 using Api.Buddy.Main.Logic.Models;
+using Api.Buddy.Main.Logic.Models.Request;
 
 namespace Api.Buddy.Main.Logic.Services;
 

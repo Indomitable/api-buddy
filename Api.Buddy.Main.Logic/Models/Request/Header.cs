@@ -1,6 +1,6 @@
 using ReactiveUI;
 
-namespace Api.Buddy.Main.Logic.Models;
+namespace Api.Buddy.Main.Logic.Models.Request;
 
 public class Header : ReactiveObject
 {

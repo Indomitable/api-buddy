@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mvvm="clr-namespace:Api.Buddy.Main.UI.MVVM"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Api.Buddy.Main.UI.Controls.Folder.FolderView"
+             x:DataType="mvvm:FolderViewModel"
+             x:CompileBindings="True">
+    <UserControl.Styles>
+        <StyleInclude Source="FolderViewStyles.axaml" />
+    </UserControl.Styles>
+    <ItemsRepeater ItemsSource="{Binding PathSegments}" Classes="folderViewPathSegments">
+        <ItemsRepeater.Layout>
+            <StackLayout Orientation="Horizontal"></StackLayout>
+        </ItemsRepeater.Layout>
+        <ItemsRepeater.ItemTemplate>
+            <DataTemplate DataType="mvvm:PathSegment">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Classes="folderViewPathSegments__segment">
+                    <TextBlock Text="{Binding Name}" />
+                    <TextBlock Text="/" IsVisible="{Binding !IsLast}"
+                               Margin="10 0"/>
+                </StackPanel>
+            </DataTemplate>
+        </ItemsRepeater.ItemTemplate>
+    </ItemsRepeater>
+</UserControl>

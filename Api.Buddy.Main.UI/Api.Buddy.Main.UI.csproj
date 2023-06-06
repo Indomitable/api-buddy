@@ -21,22 +21,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.Http" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Compile Update="Controls\Request\Body\RequestBodyText.axaml.cs">
-      <DependentUpon>RequestBodyText.axaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Controls\Request\RequestDetails.axaml.cs">
-      <DependentUpon>RequestDetails.axaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Controls\Request\RequestView.axaml.cs">
-      <DependentUpon>RequestView.axaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Api.Buddy.Main.Logic\Api.Buddy.Main.Logic.csproj" />
   </ItemGroup>

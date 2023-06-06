@@ -1,5 +1,5 @@
 using System;
-using DomainHttpMethod = Api.Buddy.Main.Logic.Models.HttpMethod;
+using DomainHttpMethod = Api.Buddy.Main.Logic.Models.Request.HttpMethod;
 using SystemHttpMethod = System.Net.Http.HttpMethod;
 
 namespace Api.Buddy.Main.Logic.Services;

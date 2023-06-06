@@ -1,4 +1,4 @@
-namespace Api.Buddy.Main.Logic.Models;
+namespace Api.Buddy.Main.Logic.Models.Request;
 
 public enum HttpMethod
 {

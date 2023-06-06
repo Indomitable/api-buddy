@@ -1,4 +1,5 @@
 using Api.Buddy.Main.Logic.Models;
+using Api.Buddy.Main.Logic.Models.Request;
 using Avalonia.Data.Converters;
 
 namespace Api.Buddy.Main.UI.Controls.Request;

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using Api.Buddy.Main.Logic.Models;
+using Api.Buddy.Main.Logic.Models.Request;
 
 namespace Api.Buddy.Main.Logic.Extensions;
 

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Api.Buddy.Main.Logic.Models;
-using HttpMethod = Api.Buddy.Main.Logic.Models.HttpMethod;
+using Api.Buddy.Main.Logic.Models.Request;
+using HttpMethod = Api.Buddy.Main.Logic.Models.Request.HttpMethod;
 
 namespace Api.Buddy.Main.Logic.Services;
 
@@ -14,28 +14,37 @@ public interface IRequestBuilder
 
 internal sealed class RequestBuilder : IRequestBuilder
 {
-    private readonly RequestInit requestInit;
+    private RequestInit requestInit;
 
     public RequestBuilder()
     {
-        requestInit = new RequestInit();
+        requestInit = RequestInit.Empty;
     }
 
     public IRequestBuilder SetMethod(HttpMethod method)
     {
-        requestInit.Method = method;
+        requestInit = requestInit with
+        {
+            Method = method
+        };
         return this;
     }
     
     public IRequestBuilder SetUrl(string url)
     {
-        requestInit.Url = url;
+        requestInit = requestInit with
+        {
+            Url = url
+        };
         return this;
     }
 
     public IRequestBuilder SetHeaders(IReadOnlyList<Header> headers)
     {
-        requestInit.Headers = headers;
+        requestInit = requestInit with
+        {
+            Headers = headers
+        };
         return this;
     }
 

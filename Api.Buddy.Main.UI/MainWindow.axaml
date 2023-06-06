@@ -4,27 +4,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:Api.Buddy.Main.UI.MVVM"
         xmlns:ui="clr-namespace:Api.Buddy.Main.UI"
+        xmlns:project="clr-namespace:Api.Buddy.Main.UI.Controls.Project"
+        xmlns:request="clr-namespace:Api.Buddy.Main.UI.Controls.Request"
+        xmlns:folder="clr-namespace:Api.Buddy.Main.UI.Controls.Folder"
         mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="600"
         x:Class="Api.Buddy.Main.UI.MainWindow"
         x:CompileBindings="True"
         x:DataType="vm:MainViewModel"
         Title="Api.Buddy.Main.UI">
-    <Window.DataTemplates>
-        <ui:ViewLocator/>
-    </Window.DataTemplates>
-    <Grid ColumnDefinitions="300 *">
-        <StackPanel Grid.Column="0" Background="Brown" Orientation="Vertical" MinWidth="300">
-            <Border>
-                <WrapPanel Orientation="Horizontal">
-                    <Label VerticalAlignment="Center">Projects</Label>
-                    <ComboBox>
-                        <ComboBoxItem>My Project</ComboBoxItem>
-                    </ComboBox>
-                </WrapPanel>
-            </Border>
-            <TreeView>
-            </TreeView>
-        </StackPanel>
-        <TransitioningContentControl Grid.Column="1" Content="{Binding CurrentPage}" />
+    <Grid ColumnDefinitions="450 *">
+        <project:ProjectView Grid.Column="0" DataContext="{Binding ProjectViewModel}" />
+        <TransitioningContentControl Grid.Column="1" Content="{Binding CurrentPage}">
+            <TransitioningContentControl.DataTemplates>
+                <DataTemplate DataType="vm:RequestViewModel">
+                    <request:RequestView />
+                </DataTemplate>
+                <DataTemplate DataType="vm:FolderViewModel">
+                    <folder:FolderView />
+                </DataTemplate>
+                <DataTemplate DataType="vm:EmptyViewModel">
+                    <TextBlock>Empty view</TextBlock>
+                </DataTemplate>
+            </TransitioningContentControl.DataTemplates>
+        </TransitioningContentControl>
     </Grid>
 </Window>

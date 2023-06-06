@@ -27,9 +27,12 @@ public static class Container
     private static void BuildAutofac(this ContainerBuilder builder)
     {
         builder.RegisterModule<Logic.ServiceBuilder>();
-        builder.RegisterType<RequestViewModel>().As<IRequestViewModel>().SingleInstance();
+
+        builder.RegisterType<RequestViewModelFactory>().As<IRequestViewModelFactory>().SingleInstance();
         builder.RegisterType<MainViewModel>().As<IMainViewModel>().SingleInstance();
         builder.RegisterType<RequestView>().SingleInstance();
+
+        builder.RegisterType<ProjectViewModel>().As<IProjectViewModel>().SingleInstance();
     }
 
     public static readonly IContainer Provider = CreateServiceProvider();

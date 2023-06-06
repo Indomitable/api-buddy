@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Api.Buddy.Main.Logic.Models;
+using Api.Buddy.Main.Logic.Models.Request;
 using Avalonia.Collections;
 using ReactiveUI;
 
