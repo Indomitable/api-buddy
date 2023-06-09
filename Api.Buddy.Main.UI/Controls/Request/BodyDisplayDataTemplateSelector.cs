@@ -12,6 +12,7 @@ public static class BodyDisplayDataTemplateSelector
         bodyType => bodyType is not null,
         bodyType => bodyType switch
         {
+            EnhancedTextBody => new RequestBodyEnhancedText { DataContext = bodyType },
             TextBody => new RequestBodyText { DataContext = bodyType },
             EmptyBody => new TextBlock { Text = string.Empty },
             _ => new TextBlock { Text = "Body not supported!" }

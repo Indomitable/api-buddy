@@ -30,4 +30,6 @@ public class EmptyBody : IBody<string>
 
 public record TextBody(string Content, bool IsReadOnly) : IBody<string>;
 
+public record EnhancedTextBody(string Content, bool IsReadOnly, TextBodyType BodyType) : TextBody(Content, IsReadOnly);
+
 public record BinaryBody(byte[] Content, bool IsReadOnly) : IBody<byte[]>;

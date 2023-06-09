@@ -1,5 +1,5 @@
-using System;
 using System.Net.Http;
+using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
 using Api.Buddy.Main.UI.Models;
@@ -30,19 +30,28 @@ public class ResponseViewModel: ReactiveObject
         {
             if (message.Content.Headers.ContentType is { MediaType: { } mediaType })
             {
-                if (string.Equals(mediaType, System.Net.Mime.MediaTypeNames.Application.Json, StringComparison.OrdinalIgnoreCase)
-                    || mediaType.StartsWith("text/"))
+                var bodyType = mediaType switch
                 {
-                    // TODO: better handle the content type
-                    var body = await message.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-                    Content = new TextBody(body, true);
-                    return;
-                }
+                    MediaTypeNames.Application.Json => TextBodyType.Json,
+                    MediaTypeNames.Application.Xml => TextBodyType.XML,
+                    "application/xhtml+xml" => TextBodyType.XML,
+                    "text/xml" => TextBodyType.XML,
+                    MediaTypeNames.Text.Html => TextBodyType.HTML,
+                    "text/javascript" => TextBodyType.JavaScript,
+                    "application/javascript" => TextBodyType.JavaScript,
+                    "text/css" => TextBodyType.CSS,
+                    _ => TextBodyType.Plain
+                };
+                var body = await message.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                Content = bodyType == TextBodyType.Plain
+                    ? new TextBody(body, true)
+                    : new EnhancedTextBody(body, true, bodyType);
             }
-
-            var data = await message.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
-            Content = new BinaryBody(data, true);
-            return;
+            else
+            {
+                var data = await message.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
+                Content = new BinaryBody(data, true);
+            }
         }
     }
 }

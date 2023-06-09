@@ -7,3 +7,12 @@ public enum BodyType
     Binary
 }
 
+public enum TextBodyType
+{
+    Plain,
+    Json,
+    XML,
+    HTML,
+    JavaScript,
+    CSS
+}
