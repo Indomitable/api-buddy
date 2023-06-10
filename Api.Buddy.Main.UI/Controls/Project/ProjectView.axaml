@@ -3,7 +3,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mvvm="clr-namespace:Api.Buddy.Main.UI.MVVM"
-             xmlns:project="clr-namespace:Api.Buddy.Main.UI.Controls.Project"
              xmlns:project1="clr-namespace:Api.Buddy.Main.Logic.Models.Project;assembly=Api.Buddy.Main.Logic"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Api.Buddy.Main.UI.Controls.Project.ProjectView"
@@ -12,7 +11,8 @@
     <Design.DataContext>
         <mvvm:ProjectViewModel />
     </Design.DataContext>
-    <StackPanel Orientation="Vertical">
+    <Border BorderThickness="0 0 1 0" BorderBrush="#333333">
+        <StackPanel Orientation="Vertical">
         <DockPanel LastChildFill="True">
             <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left"
                        Margin="5">Projects</TextBlock>
@@ -42,4 +42,5 @@
             </TreeView.DataTemplates>
         </TreeView>
     </StackPanel>
+    </Border>
 </UserControl>

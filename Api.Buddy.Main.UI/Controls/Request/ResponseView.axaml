@@ -9,7 +9,9 @@
              x:DataType="mvvm:ResponseViewModel"
              x:CompileBindings="True">
     <TabControl SelectedIndex="0">
-        <TabItem ContentTemplate="{x:Static request:BodyDisplayDataTemplateSelector.BodyTemplate}" Content="{Binding Content}">
+        <TabItem ContentTemplate="{x:Static request:BodyDisplayDataTemplateSelector.BodyTemplate}" 
+                 Content="{Binding Body}"
+                 IsVisible="{Binding Body}">
             <TabItem.Header>Body</TabItem.Header>
         </TabItem>
         <TabItem>

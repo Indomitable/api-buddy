@@ -16,11 +16,11 @@ public class ResponseViewModel: ReactiveObject
         set => this.RaiseAndSetIfChanged(ref statusCode, value);
     }
 
-    private IBody<object> content = EmptyBody.Instance;
-    public IBody<object> Content
+    private IBody<object> body = EmptyBody.Instance;
+    public IBody<object> Body
     {
-        get => content;
-        set => this.RaiseAndSetIfChanged(ref content, value);
+        get => body;
+        set => this.RaiseAndSetIfChanged(ref body, value);
     }
 
     public async Task SetResponse(HttpResponseMessage message, CancellationToken cancellationToken)
@@ -43,14 +43,14 @@ public class ResponseViewModel: ReactiveObject
                     _ => TextBodyType.Plain
                 };
                 var body = await message.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-                Content = bodyType == TextBodyType.Plain
+                Body = bodyType == TextBodyType.Plain
                     ? new TextBody(body, true)
                     : new EnhancedTextBody(body, true, bodyType);
             }
             else
             {
                 var data = await message.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
-                Content = new BinaryBody(data, true);
+                Body = new BinaryBody(data, true);
             }
         }
     }

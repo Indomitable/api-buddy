@@ -11,10 +11,14 @@
         x:Class="Api.Buddy.Main.UI.MainWindow"
         x:CompileBindings="True"
         x:DataType="vm:MainViewModel"
+        MinHeight="800"
+        MinWidth="1200"
         Title="Api.Buddy.Main.UI">
-    <Grid ColumnDefinitions="450 *">
+    <Grid ColumnDefinitions="350 *">
         <project:ProjectView Grid.Column="0" DataContext="{Binding ProjectViewModel}" />
-        <TransitioningContentControl Grid.Column="1" Content="{Binding CurrentPage}">
+        <TransitioningContentControl Grid.Column="1" 
+                                     Content="{Binding CurrentPage}" 
+                                     Padding="5 0">
             <TransitioningContentControl.DataTemplates>
                 <DataTemplate DataType="vm:RequestViewModel">
                     <request:RequestView />

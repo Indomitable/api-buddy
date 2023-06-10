@@ -8,7 +8,7 @@
              x:Class="Api.Buddy.Main.UI.Controls.Request.RequestView"
              x:CompileBindings="True"
              x:DataType="vm:RequestViewModel">
-    <Grid RowDefinitions="* *">
+    <Grid RowDefinitions="400 *">
         <controls:RequestDetails Grid.Row="0" DataContext="{Binding RequestInit}" SendCommand="{Binding ((vm:RequestViewModel)DataContext).SendCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:RequestView }}" />
         <controls:ResponseView Grid.Row="1" DataContext="{Binding Response}" />
     </Grid>
