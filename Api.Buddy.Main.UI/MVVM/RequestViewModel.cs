@@ -16,18 +16,18 @@ internal sealed class RequestViewModel : ReactiveObject, IRequestViewModel
     private readonly IRequestBuilder requestBuilder;
     private readonly IRequestExecutor requestExecutor;
 
-    public RequestViewModel(IRequestBuilder requestBuilder, IRequestExecutor requestExecutor)
+    public RequestViewModel(IRequestBuilder requestBuilder, IRequestExecutor requestExecutor, IResponseViewModel responseViewModel)
     {
         this.requestBuilder = requestBuilder;
         this.requestExecutor = requestExecutor;
         RequestInit = new RequestInitViewModel();
-        Response = new ResponseViewModel();
+        Response = responseViewModel;
         SendCommand = ReactiveCommand.CreateFromTask(Send);
     }
 
     public RequestInitViewModel RequestInit { get; }
 
-    public ResponseViewModel Response { get; }
+    public IResponseViewModel Response { get; }
 
     public ICommand SendCommand { get; }
 

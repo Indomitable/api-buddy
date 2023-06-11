@@ -2,13 +2,27 @@ using System.Net.Http;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
+using Api.Buddy.Main.UI.Controls.Request;
 using Api.Buddy.Main.UI.Models;
 using ReactiveUI;
 
 namespace Api.Buddy.Main.UI.MVVM;
 
-public class ResponseViewModel: ReactiveObject
+public interface IResponseViewModel
 {
+    int StatusCode { get; set; }
+    IBody<object> Body { get; set; }
+    Task SetResponse(HttpResponseMessage message, CancellationToken cancellationToken);
+}
+
+internal sealed class ResponseViewModel: ReactiveObject, IResponseViewModel
+{
+
+    public ResponseViewModel(IBodyDisplayDataTemplateSelector bodyDisplayDataTemplateSelector)
+    {
+        BodyDisplayDataTemplateSelector = bodyDisplayDataTemplateSelector;
+    }
+    
     private int statusCode;
     public int StatusCode
     {
@@ -22,6 +36,8 @@ public class ResponseViewModel: ReactiveObject
         get => body;
         set => this.RaiseAndSetIfChanged(ref body, value);
     }
+    
+    public IBodyDisplayDataTemplateSelector BodyDisplayDataTemplateSelector { get; }
 
     public async Task SetResponse(HttpResponseMessage message, CancellationToken cancellationToken)
     {
@@ -42,10 +58,10 @@ public class ResponseViewModel: ReactiveObject
                     "text/css" => TextBodyType.CSS,
                     _ => TextBodyType.Plain
                 };
-                var body = await message.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                var content = await message.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
                 Body = bodyType == TextBodyType.Plain
-                    ? new TextBody(body, true)
-                    : new EnhancedTextBody(body, true, bodyType);
+                    ? new TextBody(content, true)
+                    : new EnhancedTextBody(content, true, bodyType);
             }
             else
             {

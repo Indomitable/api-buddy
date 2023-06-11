@@ -7,7 +7,6 @@
              x:Class="Api.Buddy.Main.UI.Controls.Request.Body.RequestBodyEnhancedText"
              xmlns:avaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
              xmlns:body="clr-namespace:Api.Buddy.Main.UI.Controls.Request.Body"
-             xmlns:converters="clr-namespace:Api.Buddy.Main.UI.Converters"
              x:DataType="models:EnhancedTextBody"
              x:CompileBindings="True">
     <UserControl.Resources>
@@ -15,7 +14,7 @@
         <body:TextBodyTypeToSyntaxHighlightConverter x:Key="SyntaxHighlightConverter" />
     </UserControl.Resources>
     <avaloniaEdit:TextEditor x:Name="TextEditor"
-                             Document="{Binding Content, Converter={StaticResource DocumentConverter}}"
+                             Document="{Binding ., Converter={StaticResource DocumentConverter}}"
                              SyntaxHighlighting="{Binding BodyType, Converter={StaticResource SyntaxHighlightConverter}}"
                              WordWrap="True"
                              VerticalScrollBarVisibility="Visible"

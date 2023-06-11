@@ -6,16 +6,27 @@ using Avalonia.Controls.Templates;
 
 namespace Api.Buddy.Main.UI.Controls.Request;
 
-public static class BodyDisplayDataTemplateSelector
+public interface IBodyDisplayDataTemplateSelector
 {
-    public static FuncDataTemplate<IBody<object>?> BodyTemplate = new(
-        bodyType => bodyType is not null,
-        bodyType => bodyType switch
-        {
-            EnhancedTextBody => new RequestBodyEnhancedText { DataContext = bodyType },
-            TextBody => new RequestBodyText { DataContext = bodyType },
-            EmptyBody => new TextBlock { Text = string.Empty },
-            _ => new TextBlock { Text = "Body not supported!" }
-        }
-    );
+    FuncDataTemplate<IBody<object>?> BodyTemplate { get; }
+}
+
+public class BodyDisplayDataTemplateSelector : IBodyDisplayDataTemplateSelector
+{
+    public BodyDisplayDataTemplateSelector(Func<EnhancedTextBody, RequestBodyEnhancedText> enhancedBodyCreator,
+        Func<TextBody, RequestBodyText> textBodyCreator)
+    {
+        BodyTemplate = new(
+            body => body is not null,
+            body => body switch
+            {
+                EnhancedTextBody eb => enhancedBodyCreator(eb),
+                TextBody tb => textBodyCreator(tb),
+                EmptyBody => new TextBlock { Text = string.Empty },
+                _ => new TextBlock { Text = "Body not supported!" }
+            }
+        );   
+    }
+    
+    public FuncDataTemplate<IBody<object>?> BodyTemplate { get; }
 }

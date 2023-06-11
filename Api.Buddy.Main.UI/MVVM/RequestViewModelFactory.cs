@@ -12,16 +12,18 @@ internal sealed class RequestViewModelFactory : IRequestViewModelFactory
 {
     private readonly IRequestBuilder requestBuilder;
     private readonly IRequestExecutor requestExecutor;
+    private readonly IResponseViewModel responseViewModel;
 
-    public RequestViewModelFactory(IRequestBuilder requestBuilder, IRequestExecutor requestExecutor)
+    public RequestViewModelFactory(IRequestBuilder requestBuilder, IRequestExecutor requestExecutor, IResponseViewModel responseViewModel)
     {
         this.requestBuilder = requestBuilder;
         this.requestExecutor = requestExecutor;
+        this.responseViewModel = responseViewModel;
     }
 
     public IRequestViewModel Create(RequestNode requestNode)
     {
-        var viewModel = new RequestViewModel(requestBuilder, requestExecutor)
+        var viewModel = new RequestViewModel(requestBuilder, requestExecutor, responseViewModel)
         {
             RequestInit =
             {
