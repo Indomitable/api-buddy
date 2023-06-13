@@ -22,7 +22,7 @@ public partial class App : Application
                 DataContext = Container.Provider.Resolve<IMainViewModel>(),
                 Width = 1600,
                 Height = 900,
-                Topmost = true
+                // Topmost = true
             };
         }
 

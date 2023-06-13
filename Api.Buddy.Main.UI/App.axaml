@@ -13,6 +13,10 @@
         <FluentTheme />
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
         <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
-        <StyleInclude Source="avares://Api.Buddy.Main.UI/Styles/DataGridStyles.axaml" />
+        <StyleInclude Source="/Styles/DataGridStyles.axaml" />
+        <StyleInclude Source="/Styles/MaterialIcons.axaml" />
+        <StyleInclude Source="/Styles/Flyouts.axaml" />
+        <StyleInclude Source="/TemplateControls/EditableMenuItem.axaml" />
+        <StyleInclude Source="/TemplateControls/ReadonlyMenuItem.axaml" />
     </Application.Styles>
 </Application>

@@ -1,0 +1,35 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Api.Buddy.Main.UI.TemplateControls">
+    <Design.PreviewWith>
+        <controls:EditableMenuItem Text="Add Project" Icon="playlist_add" />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|EditableMenuItem">
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid x:Name="PART_EditableMenuItem" 
+                            VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                            ColumnDefinitions="30 *">
+                    <TextBlock Grid.Column="0" HorizontalAlignment="Center"
+                               Text="{TemplateBinding Icon}" FontSize="16" Classes="icons"
+                               Margin="12 5 5 5" VerticalAlignment="Center" 
+                               x:Name="PART_EditableMenuItem_Icon"
+                    />
+                    <TextBlock Grid.Column="1" Text="{TemplateBinding Text}" 
+                               FontSize="18" VerticalAlignment="Center"
+                               x:Name="PART_EditableMenuItem_Text" IsVisible="{TemplateBinding ReadOnly}"
+                               Margin="0 7 10 7"/>
+                    <TextBox Grid.Column="1" FontSize="16" VerticalAlignment="Center"
+                             x:Name="PART_EditableMenuItem_TextValue"
+                             Width="150"
+                             IsVisible="{Binding !ReadOnly, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" 
+                             Text="{Binding TextValue, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                             Margin="0 7 10 7"
+                    />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

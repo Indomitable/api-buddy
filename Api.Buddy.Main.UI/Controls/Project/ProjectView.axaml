@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mvvm="clr-namespace:Api.Buddy.Main.UI.MVVM"
              xmlns:project1="clr-namespace:Api.Buddy.Main.Logic.Models.Project;assembly=Api.Buddy.Main.Logic"
+             xmlns:templateControls="clr-namespace:Api.Buddy.Main.UI.TemplateControls"
+             xmlns:project="clr-namespace:Api.Buddy.Main.UI.Controls.Project"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Api.Buddy.Main.UI.Controls.Project.ProjectView"
              x:DataType="mvvm:ProjectViewModel"
@@ -15,9 +17,24 @@
         <StackPanel Orientation="Vertical">
         <DockPanel LastChildFill="True">
             <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left"
-                       Margin="5">Projects</TextBlock>
-            <ComboBox ItemsSource="{Binding Projects}" FontSize="22"
-                      SelectedItem="{Binding Project}">
+                       FontSize="18"
+                       Margin="10 5 0 5">Projects</TextBlock>
+            <ToggleButton DockPanel.Dock="Right" Margin="0 5 10 5" Background="Transparent">
+                <ToggleButton.Flyout>
+                    <MenuFlyout Placement="BottomEdgeAlignedLeft" ShowMode="Standard" FlyoutPresenterClasses="menuFlyout">
+                        <MenuFlyout.Items>
+                            <templateControls:EditableMenuItem Text="Add Project" Icon="playlist_add"
+                                                               EditCommand="{Binding CreateProjectCommand}" />
+                            <templateControls:EditableMenuItem Text="Add Folder" Icon="create_new_folder"
+                                                               EditCommand="{Binding CreateTopFolderCommand}"/>
+                        </MenuFlyout.Items>
+                    </MenuFlyout>
+                </ToggleButton.Flyout>
+                <TextBlock Classes="icons" Text="add" FontSize="18" FontWeight="Heavy" />
+            </ToggleButton>
+            <ComboBox ItemsSource="{Binding Projects}" FontSize="20"
+                      SelectedItem="{Binding Project}" 
+                      HorizontalAlignment="Stretch" Margin="10 5">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Name}" />
@@ -31,7 +48,24 @@
                   Margin="0 10">
             <TreeView.DataTemplates>
                 <TreeDataTemplate DataType="project1:FolderNode" ItemsSource="{Binding Children}">
-                    <TextBlock Text="{Binding Name}" FontSize="18" />
+                    <DockPanel VerticalAlignment="Center">
+                        <Button DockPanel.Dock="Right" Margin="0 0 10 0" Background="Transparent">
+                                <!-- Command="{Binding Path=((mvvm:ProjectViewModel)DataContext).CreateFolderCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}" -->
+                                <!-- CommandParameter="test"> -->
+                            <TextBlock Text="more_horiz" Classes="icons" />
+                            <Button.Flyout>
+                                <MenuFlyout Placement="BottomEdgeAlignedLeft" ShowMode="Standard" FlyoutPresenterClasses="menuFlyout">
+                                    <templateControls:EditableMenuItem Text="Add Folder" Icon="playlist_add"
+                                                                       EditCommand="{Binding CreateFolderCommand}" />
+                                    <templateControls:EditableMenuItem Text="Create Request" Icon="create_new_folder"
+                                                                       EditCommand="{Binding CreateRequestCommand}"/>
+                                    <templateControls:ReadonlyMenuItem Text="Rename" Icon="drive_file_rename_outline" />
+                                    <templateControls:ReadonlyMenuItem Text="Delete" Icon="delete" />
+                                </MenuFlyout>
+                            </Button.Flyout>
+                        </Button>
+                        <TextBlock Text="{Binding Name}" FontSize="18" />
+                    </DockPanel>
                 </TreeDataTemplate>
                 <DataTemplate DataType="project1:RequestNode">
                     <StackPanel Orientation="Horizontal">

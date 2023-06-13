@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Windows.Input;
 using Api.Buddy.Main.Logic.Models.Project;
 using Api.Buddy.Main.Logic.Models.Request;
 using Avalonia.Collections;
@@ -9,7 +10,7 @@ namespace Api.Buddy.Main.UI.MVVM;
 public interface IProjectViewModel
 {
     AvaloniaList<Project> Projects { get; }
-    Project Project { get; set; }
+    Project? Project { get; set; }
     ProjectNode? SelectedNode { get; set; }
 }
 
@@ -64,12 +65,22 @@ internal sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
             }
         };
         project = Projects.First();
+
+        CreateProjectCommand = ReactiveCommand.Create<string>(OnCreateProject);
+        CreateTopFolderCommand = ReactiveCommand.Create<string>(OnCreateTopFolder);
+        CreateFolderCommand = ReactiveCommand.Create<string>(OnCreateFolder);
     }
+
+    public ICommand CreateProjectCommand { get; }
+    
+    public ICommand CreateTopFolderCommand { get; }
+    
+    public ICommand CreateFolderCommand { get; }
 
     public AvaloniaList<Project> Projects { get; }
 
-    private Project project;
-    public Project Project
+    private Project? project;
+    public Project? Project
     {
         get => project;
         set => this.RaiseAndSetIfChanged(ref project, value);
@@ -80,5 +91,22 @@ internal sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
     {
         get => selectedNode;
         set => this.RaiseAndSetIfChanged(ref selectedNode, value);
+    }
+
+    private void OnCreateProject(string projectName)
+    {
+        var item = new Project { Name = projectName };
+        Projects.Add(item);
+        Project = item;
+    }
+
+    private void OnCreateTopFolder(string folderName)
+    {
+        Project?.Nodes.Add(new FolderNode { Name = folderName, Parent = null });
+    }
+    
+    private void OnCreateFolder(string folderName)
+    {
+        Project?.Nodes.Add(new FolderNode { Name = folderName, Parent = null });
     }
 }
