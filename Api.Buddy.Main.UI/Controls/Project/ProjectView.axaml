@@ -21,8 +21,9 @@
                            Margin="10 5 0 5">
                     Projects
                 </TextBlock>
-                <ToggleButton DockPanel.Dock="Right" Margin="0 5 10 5" Background="Transparent">
-                    <ToggleButton.Flyout>
+            <Button DockPanel.Dock="Right" Margin="0 5 10 5" Background="Transparent"
+                    x:Name="ProjectAddMenu">
+                <Button.Flyout>
                         <MenuFlyout Placement="BottomEdgeAlignedLeft" ShowMode="Standard">
                             <MenuFlyout.Items>
                                 <MenuItem Header="Add Project"
@@ -39,9 +40,9 @@
                                 </MenuItem>
                             </MenuFlyout.Items>
                         </MenuFlyout>
-                    </ToggleButton.Flyout>
+                </Button.Flyout>
                     <TextBlock Classes="icons" Text="add" FontSize="18" FontWeight="Heavy" />
-                </ToggleButton>
+            </Button>
                 <ComboBox ItemsSource="{Binding Projects}" FontSize="20"
                           SelectedItem="{Binding Project}"
                           HorizontalAlignment="Stretch" Margin="10 5">
