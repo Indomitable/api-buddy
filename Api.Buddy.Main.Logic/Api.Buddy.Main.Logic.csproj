@@ -2,7 +2,6 @@
   <ItemGroup>
     <PackageReference Include="Autofac" />
     <PackageReference Include="Avalonia.ReactiveUI" />
-    <PackageReference Include="ReactiveUI" />
     <PackageReference Include="Microsoft.Extensions.Http" />
   </ItemGroup>
 </Project>

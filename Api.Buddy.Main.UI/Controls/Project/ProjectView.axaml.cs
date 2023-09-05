@@ -1,6 +1,7 @@
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 namespace Api.Buddy.Main.UI.Controls.Project;
@@ -17,11 +18,11 @@ public partial class ProjectView : UserControl
         AvaloniaXamlLoader.Load(this);
     }
 
-    protected override void OnLoaded()
+    protected override void OnLoaded(RoutedEventArgs e)
     {
         var treeView = this.GetControl<TreeView>("ProjectTree");
         var item = (TreeViewItem)treeView.TreeContainerFromItem(treeView.Items.First()!)!;
         treeView.ExpandSubTree(item);
-        base.OnLoaded();
+        base.OnLoaded(e);
     }
 }
