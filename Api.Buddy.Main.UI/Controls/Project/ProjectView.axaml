@@ -64,13 +64,13 @@
                                 </MenuFlyout>
                             </Button.Flyout>
                         </Button>
-                        <TextBlock Text="{Binding Name}" FontSize="18" />
+                        <TextBlock Text="{Binding Name}" FontSize="20" />
                     </DockPanel>
                 </TreeDataTemplate>
                 <DataTemplate DataType="project1:RequestNode">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Request.Method}" VerticalAlignment="Center" />
-                        <TextBlock Text="{Binding Name}" FontSize="16" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Request.Method}" FontSize="16" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Name}" FontSize="18" VerticalAlignment="Center" />
                     </StackPanel>
                 </DataTemplate>
             </TreeView.DataTemplates>
