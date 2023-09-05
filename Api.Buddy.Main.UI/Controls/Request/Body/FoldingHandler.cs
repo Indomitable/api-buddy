@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Api.Buddy.Main.UI.Models;
-using Autofac.Features.Indexed;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Folding;
 
@@ -14,20 +14,16 @@ public interface IFoldingHandlerResolver
 
 internal sealed class FoldingHandlerResolver : IFoldingHandlerResolver
 {
-    private readonly IIndex<TextBodyType, IFoldingHandler> foldingHandlers;
+    private readonly Func<TextBodyType, IFoldingHandler?> foldingHandlers;
 
-    public FoldingHandlerResolver(IIndex<TextBodyType, IFoldingHandler> foldingHandlers)
+    public FoldingHandlerResolver(Func<TextBodyType, IFoldingHandler?> foldingHandlers)
     {
         this.foldingHandlers = foldingHandlers;
     }
 
     public IFoldingHandler? Get(TextBodyType bodyType)
     {
-        if (foldingHandlers.TryGetValue(bodyType, out var handler))
-        {
-            return handler;
-        }
-        return null;
+        return foldingHandlers(bodyType);
     }
 }
 
@@ -82,13 +78,8 @@ internal sealed class JsonFoldingHandler : IFoldingHandler
 
 internal sealed class XmlFoldingHandler : IFoldingHandler
 {
-    private readonly XmlFoldingStrategy strategy;
+    private readonly XmlFoldingStrategy strategy = new();
 
-    public XmlFoldingHandler()
-    {
-        strategy = new XmlFoldingStrategy();
-    }
-    
     public void UpdateFoldings(FoldingManager foldingManager, TextDocument document)
     {
         strategy.UpdateFoldings(foldingManager, document);

@@ -1,8 +1,8 @@
 using Api.Buddy.Main.UI.MVVM;
-using Autofac;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Api.Buddy.Main.UI;
 
@@ -19,7 +19,7 @@ public partial class App : Application
         {
             desktop.MainWindow = new MainWindow
             {
-                DataContext = Container.Provider.Resolve<IMainViewModel>(),
+                DataContext = Container.Provider.GetRequiredService<IMainViewModel>(),
                 Width = 1600,
                 Height = 900,
                 // Topmost = true

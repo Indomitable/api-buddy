@@ -1,14 +1,15 @@
 using Api.Buddy.Main.Logic.Services;
-using Autofac;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Api.Buddy.Main.Logic;
 
-public class ServiceBuilder: Module
+public static class ServiceBuilder
 {
-    protected override void Load(ContainerBuilder builder)
+    public static IServiceCollection AddLogic(this IServiceCollection services)
     {
-        builder.RegisterType<Mapper>().As<IMapper>().SingleInstance();
-        builder.RegisterType<RequestBuilder>().As<IRequestBuilder>().SingleInstance();
-        builder.RegisterType<RequestExecutor>().As<IRequestExecutor>().SingleInstance();
+        services.AddSingleton<IMapper, Mapper>();
+        services.AddSingleton<IRequestBuilder, RequestBuilder>();
+        services.AddSingleton<IRequestExecutor, RequestExecutor>();
+        return services;
     }
 }
