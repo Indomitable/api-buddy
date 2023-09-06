@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Api.Buddy.Main.Dialogs.Services;
@@ -21,6 +22,7 @@ public interface IProjectViewModel: IDisposable
 public sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
 {
     private readonly ITextInputDialogService textInputDialogService;
+    private readonly Subject<ProjectNode> nodeCreated;
 
     public ProjectViewModel(ITextInputDialogService textInputDialogService)
     {
@@ -77,6 +79,7 @@ public sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
         CreateFolderCommand = ReactiveCommand.CreateFromTask<FolderNode>(OnCreateFolder);
         CreateRequestCommand = ReactiveCommand.CreateFromTask<FolderNode>(OnCreateRequest);
         RenameFolderCommand = ReactiveCommand.CreateFromTask<FolderNode>(OnRenameFolder);
+        nodeCreated = new Subject<ProjectNode>();
     }
 
     public ICommand CreateProjectCommand { get; }
@@ -88,6 +91,8 @@ public sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
     public ICommand CreateRequestCommand { get; }
 
     public ICommand RenameFolderCommand { get; }
+
+    public IObservable<ProjectNode> NodeCreated => nodeCreated;
 
     public AvaloniaList<Project> Projects { get; }
 
@@ -133,6 +138,7 @@ public sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
         {
             var child = new FolderNode { Name = input, Parent = folder, };
             folder.Children.Insert(folder.GetIndex(child), child);
+            nodeCreated.OnNext(child);
         }
     }
 
@@ -151,6 +157,7 @@ public sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
                 }
             };
             folder.Children.Insert(folder.GetIndex(child), child);
+            nodeCreated.OnNext(child);
         }
     }
 

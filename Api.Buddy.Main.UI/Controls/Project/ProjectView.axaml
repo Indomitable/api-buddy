@@ -84,7 +84,7 @@
                                                 <TextBlock Text="drive_file_rename_outline" Classes="icons" />
                                             </MenuItem.Icon>
                                         </MenuItem>
-                                        <MenuItem Click="MenuItem_OnClick" Header="Delete">
+                                        <MenuItem Header="Delete">
                                             <MenuItem.Icon>
                                                 <TextBlock Text="delete" Classes="icons" />
                                             </MenuItem.Icon>
