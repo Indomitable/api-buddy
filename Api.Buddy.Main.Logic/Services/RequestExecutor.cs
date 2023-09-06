@@ -2,14 +2,13 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Api.Buddy.Main.Logic.Extensions;
-using Api.Buddy.Main.Logic.Models;
 using Api.Buddy.Main.Logic.Models.Request;
 
 namespace Api.Buddy.Main.Logic.Services;
 
 public interface IRequestExecutor
 {
-    Task<HttpResponseMessage> Execute(RequestInit requestInit);
+    Task<HttpResponseMessage?> Execute(RequestInit requestInit);
 }
 
 internal sealed class RequestExecutor : IRequestExecutor
@@ -23,14 +22,22 @@ internal sealed class RequestExecutor : IRequestExecutor
         this.mapper = mapper;
     }
 
-    public async Task<HttpResponseMessage> Execute(RequestInit requestInit)
+    public async Task<HttpResponseMessage?> Execute(RequestInit requestInit)
     {
-        using var client = httpClientFactory.CreateClient();
-        var message = new HttpRequestMessage();
-        message.Method = mapper.ToSystemHttpMethod(requestInit.Method);
-        message.RequestUri = requestInit.BuildUri();
-        message.Headers.AddRange(requestInit.Headers);
-        var response = await client.SendAsync(message);
-        return response; // TODO: return custom object
+        try
+        {
+            using var client = httpClientFactory.CreateClient();
+            var message = new HttpRequestMessage();
+            message.Method = mapper.ToSystemHttpMethod(requestInit.Method);
+            message.RequestUri = requestInit.BuildUri();
+            message.Headers.AddRange(requestInit.Headers);
+            var response = await client.SendAsync(message);
+            return response; // TODO: return custom object
+        }
+        catch (Exception e)
+        {
+            // TODO: create an execution log and how the exception there. 
+            return null;
+        }
     }
 }

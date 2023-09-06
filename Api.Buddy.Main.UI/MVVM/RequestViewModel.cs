@@ -39,6 +39,9 @@ internal sealed class RequestViewModel : ReactiveObject, IRequestViewModel
             .SetHeaders(RequestInit.Headers)
             .Build();
         var responseMessage = await requestExecutor.Execute(requestInit);
-        await Response.SetResponse(responseMessage, cancellationToken);
+        if (responseMessage is not null)
+        {
+            await Response.SetResponse(responseMessage, cancellationToken);
+        }
     }
 }
