@@ -1,5 +1,6 @@
 using System;
 using Api.Buddy.Main.Logic;
+using Api.Buddy.Main.Dialogs;
 using Api.Buddy.Main.UI.Controls.Request;
 using Api.Buddy.Main.UI.Controls.Request.Body;
 using Api.Buddy.Main.UI.Models;
@@ -19,7 +20,8 @@ public static class Container
             .AddLogic()
             .AddServices()
             .AddViewModels()
-            .AddControls();
+            .AddControls()
+            .AddDialogs();
     }
 
     private static IServiceCollection AddViewModels(this IServiceCollection collection)

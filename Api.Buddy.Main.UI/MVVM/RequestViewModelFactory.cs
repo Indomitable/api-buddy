@@ -3,7 +3,7 @@ using Api.Buddy.Main.Logic.Services;
 
 namespace Api.Buddy.Main.UI.MVVM;
 
-internal interface IRequestViewModelFactory
+public interface IRequestViewModelFactory
 {
     IRequestViewModel Create(RequestNode requestNode);
 }

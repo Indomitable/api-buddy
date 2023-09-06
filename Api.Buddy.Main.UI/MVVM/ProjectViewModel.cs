@@ -1,5 +1,9 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Api.Buddy.Main.Dialogs.Services;
 using Api.Buddy.Main.Logic.Models.Project;
 using Api.Buddy.Main.Logic.Models.Request;
 using Avalonia.Collections;
@@ -7,17 +11,20 @@ using ReactiveUI;
 
 namespace Api.Buddy.Main.UI.MVVM;
 
-public interface IProjectViewModel
+public interface IProjectViewModel: IDisposable
 {
     AvaloniaList<Project> Projects { get; }
     Project? Project { get; set; }
     ProjectNode? SelectedNode { get; set; }
 }
 
-internal sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
+public sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
 {
-    public ProjectViewModel()
+    private readonly ITextInputDialogService textInputDialogService;
+
+    public ProjectViewModel(ITextInputDialogService textInputDialogService)
     {
+        this.textInputDialogService = textInputDialogService;
         var tdAdminNode = new FolderNode { Name = "Countries" };
         var capitalsNode = new FolderNode { Name = "Capitals", Parent = tdAdminNode };
         var getCapitals = new RequestNode
@@ -65,10 +72,11 @@ internal sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
             }
         };
         project = Projects.First();
-
-        CreateProjectCommand = ReactiveCommand.Create<string>(OnCreateProject);
-        CreateTopFolderCommand = ReactiveCommand.Create<string>(OnCreateTopFolder);
-        CreateFolderCommand = ReactiveCommand.Create<string>(OnCreateFolder);
+        CreateProjectCommand = ReactiveCommand.CreateFromTask(OnCreateProject);
+        CreateTopFolderCommand = ReactiveCommand.CreateFromTask(OnCreateTopFolder);
+        CreateFolderCommand = ReactiveCommand.CreateFromTask<FolderNode>(OnCreateFolder);
+        CreateRequestCommand = ReactiveCommand.CreateFromTask<FolderNode>(OnCreateRequest);
+        RenameFolderCommand = ReactiveCommand.CreateFromTask<FolderNode>(OnRenameFolder);
     }
 
     public ICommand CreateProjectCommand { get; }
@@ -76,6 +84,10 @@ internal sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
     public ICommand CreateTopFolderCommand { get; }
     
     public ICommand CreateFolderCommand { get; }
+
+    public ICommand CreateRequestCommand { get; }
+
+    public ICommand RenameFolderCommand { get; }
 
     public AvaloniaList<Project> Projects { get; }
 
@@ -87,26 +99,89 @@ internal sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
     }
 
     private ProjectNode? selectedNode;
+
     public ProjectNode? SelectedNode
     {
         get => selectedNode;
         set => this.RaiseAndSetIfChanged(ref selectedNode, value);
     }
 
-    private void OnCreateProject(string projectName)
+    private async Task OnCreateProject()
     {
-        var item = new Project { Name = projectName };
-        Projects.Add(item);
-        Project = item;
+        var input = await textInputDialogService.GetInput("Enter project name:");
+        if (!string.IsNullOrEmpty(input))
+        {
+            var item = new Project { Name = input };
+            Projects.Add(item);
+            Project = item;
+        }
     }
 
-    private void OnCreateTopFolder(string folderName)
+    private async Task OnCreateTopFolder()
     {
-        Project?.Nodes.Add(new FolderNode { Name = folderName, Parent = null });
+        var input = await textInputDialogService.GetInput("Enter folder name:");
+        if (!string.IsNullOrEmpty(input))
+        {
+            Project?.Nodes.Add(new FolderNode { Name = input, Parent = null });
+        }
     }
     
-    private void OnCreateFolder(string folderName)
+    private async Task OnCreateFolder(FolderNode folder)
     {
-        Project?.Nodes.Add(new FolderNode { Name = folderName, Parent = null });
+        var input = await textInputDialogService.GetInput("Enter folder name:");
+        if (!string.IsNullOrEmpty(input))
+        {
+            var child = new FolderNode { Name = input, Parent = folder, };
+            folder.Children.Insert(folder.GetIndex(child), child);
+        }
+    }
+
+    private async Task OnCreateRequest(FolderNode folder)
+    {
+        var input = await textInputDialogService.GetInput("Enter request name:");
+        if (!string.IsNullOrEmpty(input))
+        {
+            var child = new RequestNode
+            {
+                Name = input,
+                Parent = folder,
+                Request = RequestInit.Empty with
+                {
+                    Method = TryGuessMethod(input)
+                }
+            };
+            folder.Children.Insert(folder.GetIndex(child), child);
+        }
+    }
+
+    private async Task OnRenameFolder(FolderNode folder)
+    {
+        var input = await textInputDialogService.GetInput("Enter new name:", folder.Name);
+        if (!string.IsNullOrEmpty(input))
+        {
+            folder.Name = input;
+        }
+    }
+
+    private HttpMethod TryGuessMethod(string name)
+    {
+        var dictionary = new Dictionary<HttpMethod, List<string>>
+        {
+            [HttpMethod.POST] = new(){ "Create", "Insert" },
+            [HttpMethod.PUT] = new(){ "Update", "Set", "Modify" },
+            [HttpMethod.DELETE] = new(){ "Delete", "Remove" }
+        };
+        foreach (var (key, value) in dictionary)
+        {
+            if (value.Any(v => name.StartsWith(v, StringComparison.OrdinalIgnoreCase)))
+            {
+                return key;
+            }
+        }
+        return HttpMethod.GET;
+    }
+
+    public void Dispose()
+    {
     }
 }

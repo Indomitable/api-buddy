@@ -15,7 +15,7 @@
         <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
         <StyleInclude Source="/Styles/DataGridStyles.axaml" />
         <StyleInclude Source="/Styles/MaterialIcons.axaml" />
-        <StyleInclude Source="/Styles/Flyouts.axaml" />
+        <StyleInclude Source="/Styles/TextStyles.axaml" />
         <StyleInclude Source="/TemplateControls/EditableMenuItem.axaml" />
         <StyleInclude Source="/TemplateControls/ReadonlyMenuItem.axaml" />
     </Application.Styles>

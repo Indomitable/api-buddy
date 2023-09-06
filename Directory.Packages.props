@@ -10,6 +10,7 @@
     <PackageVersion Include="Avalonia.ReactiveUI" Version="11.0.4" />
     <PackageVersion Include="Avalonia.Themes.Fluent" Version="11.0.4" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="7.0.0" />
   </ItemGroup>
 </Project>

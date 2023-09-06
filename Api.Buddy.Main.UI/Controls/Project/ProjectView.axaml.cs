@@ -1,12 +1,14 @@
 using System.Linq;
-using Avalonia;
+using Api.Buddy.Main.UI.MVVM;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
+using ReactiveUI;
 
 namespace Api.Buddy.Main.UI.Controls.Project;
 
-public partial class ProjectView : UserControl
+public partial class ProjectView : ReactiveUserControl<ProjectViewModel>
 {
     public ProjectView()
     {
@@ -24,5 +26,9 @@ public partial class ProjectView : UserControl
         var item = (TreeViewItem)treeView.TreeContainerFromItem(treeView.Items.First()!)!;
         treeView.ExpandSubTree(item);
         base.OnLoaded(e);
+    }
+
+    private void MenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
     }
 }

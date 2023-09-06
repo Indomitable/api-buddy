@@ -15,66 +15,94 @@
     </Design.DataContext>
     <Border BorderThickness="0 0 1 0" BorderBrush="#333333">
         <StackPanel Orientation="Vertical">
-        <DockPanel LastChildFill="True">
-            <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left"
-                       FontSize="18"
-                       Margin="10 5 0 5">Projects</TextBlock>
-            <ToggleButton DockPanel.Dock="Right" Margin="0 5 10 5" Background="Transparent">
-                <ToggleButton.Flyout>
-                    <MenuFlyout Placement="BottomEdgeAlignedLeft" ShowMode="Standard" FlyoutPresenterClasses="menuFlyout">
-                        <MenuFlyout.Items>
-                            <templateControls:EditableMenuItem Text="Add Project" Icon="playlist_add"
-                                                               EditCommand="{Binding CreateProjectCommand}" />
-                            <templateControls:EditableMenuItem Text="Add Folder" Icon="create_new_folder"
-                                                               EditCommand="{Binding CreateTopFolderCommand}"/>
-                        </MenuFlyout.Items>
-                    </MenuFlyout>
-                </ToggleButton.Flyout>
-                <TextBlock Classes="icons" Text="add" FontSize="18" FontWeight="Heavy" />
-            </ToggleButton>
-            <ComboBox ItemsSource="{Binding Projects}" FontSize="20"
-                      SelectedItem="{Binding Project}" 
-                      HorizontalAlignment="Stretch" Margin="10 5">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}" />
+            <DockPanel LastChildFill="True">
+                <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left"
+                           FontSize="18"
+                           Margin="10 5 0 5">
+                    Projects
+                </TextBlock>
+                <ToggleButton DockPanel.Dock="Right" Margin="0 5 10 5" Background="Transparent">
+                    <ToggleButton.Flyout>
+                        <MenuFlyout Placement="BottomEdgeAlignedLeft" ShowMode="Standard">
+                            <MenuFlyout.Items>
+                                <MenuItem Header="Add Project"
+                                          Command="{Binding  CreateProjectCommand}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Text="playlist_add" Classes="icons" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Add Folder"
+                                          Command="{Binding  CreateTopFolderCommand}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Text="create_new_folder" Classes="icons" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </MenuFlyout.Items>
+                        </MenuFlyout>
+                    </ToggleButton.Flyout>
+                    <TextBlock Classes="icons" Text="add" FontSize="18" FontWeight="Heavy" />
+                </ToggleButton>
+                <ComboBox ItemsSource="{Binding Projects}" FontSize="20"
+                          SelectedItem="{Binding Project}"
+                          HorizontalAlignment="Stretch" Margin="10 5">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </DockPanel>
+            <TreeView x:Name="ProjectTree"
+                      ItemsSource="{Binding Project.Nodes}"
+                      SelectedItem="{Binding SelectedNode}"
+                      Margin="0 10">
+                <TreeView.DataTemplates>
+                    <TreeDataTemplate DataType="project1:FolderNode" ItemsSource="{Binding Children}">
+                        <DockPanel VerticalAlignment="Center">
+                            <Button DockPanel.Dock="Right" Margin="0 0 10 0" Background="Transparent">
+                                <TextBlock Text="more_horiz" Classes="icons" />
+                                <Button.Flyout>
+                                    <MenuFlyout Placement="BottomEdgeAlignedLeft" ShowMode="Standard">
+                                        <MenuItem Header="Add Folder"
+                                                  Command="{Binding  $parent[project:ProjectView].((mvvm:ProjectViewModel)DataContext).CreateFolderCommand}"
+                                                  CommandParameter="{Binding .}">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="playlist_add" Classes="icons" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Create Request"
+                                                  Command="{Binding  $parent[project:ProjectView].((mvvm:ProjectViewModel)DataContext).CreateRequestCommand}"
+                                                  CommandParameter="{Binding .}">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="create_new_folder" Classes="icons" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Rename"
+                                                  Command="{Binding  $parent[project:ProjectView].((mvvm:ProjectViewModel)DataContext).RenameFolderCommand}"
+                                                  CommandParameter="{Binding .}">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="drive_file_rename_outline" Classes="icons" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Click="MenuItem_OnClick" Header="Delete">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="delete" Classes="icons" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                            <TextBlock Text="{Binding Name}" Classes="largeText" />
+                        </DockPanel>
+                    </TreeDataTemplate>
+                    <DataTemplate DataType="project1:RequestNode">
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <TextBlock Text="{Binding Request.Method}" Classes="smallText" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding Name}" Classes="mediumText" VerticalAlignment="Center" />
+                        </StackPanel>
                     </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-        </DockPanel>
-        <TreeView x:Name="ProjectTree"
-                  ItemsSource="{Binding Project.Nodes}"
-                  SelectedItem="{Binding SelectedNode}"
-                  Margin="0 10">
-            <TreeView.DataTemplates>
-                <TreeDataTemplate DataType="project1:FolderNode" ItemsSource="{Binding Children}">
-                    <DockPanel VerticalAlignment="Center">
-                        <Button DockPanel.Dock="Right" Margin="0 0 10 0" Background="Transparent">
-                                <!-- Command="{Binding Path=((mvvm:ProjectViewModel)DataContext).CreateFolderCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TreeView}}" -->
-                                <!-- CommandParameter="test"> -->
-                            <TextBlock Text="more_horiz" Classes="icons" />
-                            <Button.Flyout>
-                                <MenuFlyout Placement="BottomEdgeAlignedLeft" ShowMode="Standard" FlyoutPresenterClasses="menuFlyout">
-                                    <templateControls:EditableMenuItem Text="Add Folder" Icon="playlist_add"
-                                                                       EditCommand="{Binding CreateFolderCommand}" />
-                                    <templateControls:EditableMenuItem Text="Create Request" Icon="create_new_folder"
-                                                                       EditCommand="{Binding CreateRequestCommand}"/>
-                                    <templateControls:ReadonlyMenuItem Text="Rename" Icon="drive_file_rename_outline" />
-                                    <templateControls:ReadonlyMenuItem Text="Delete" Icon="delete" />
-                                </MenuFlyout>
-                            </Button.Flyout>
-                        </Button>
-                        <TextBlock Text="{Binding Name}" FontSize="20" />
-                    </DockPanel>
-                </TreeDataTemplate>
-                <DataTemplate DataType="project1:RequestNode">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Request.Method}" FontSize="16" VerticalAlignment="Center" />
-                        <TextBlock Text="{Binding Name}" FontSize="18" VerticalAlignment="Center" />
-                    </StackPanel>
-                </DataTemplate>
-            </TreeView.DataTemplates>
-        </TreeView>
-    </StackPanel>
+                </TreeView.DataTemplates>
+            </TreeView>
+        </StackPanel>
     </Border>
 </UserControl>

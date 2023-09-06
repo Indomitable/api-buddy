@@ -23,17 +23,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Api.Buddy.Main.Dialogs\Api.Buddy.Main.Dialogs.csproj" />
     <ProjectReference Include="..\Api.Buddy.Main.Logic\Api.Buddy.Main.Logic.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <AvaloniaResource Include="Fonts\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="TemplateControls\ReadonlyMenuItem.axaml.cs">
-      <DependentUpon>ReadonlyMenuItem.axaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
 </Project>

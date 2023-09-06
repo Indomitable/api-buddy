@@ -10,7 +10,7 @@ public interface IMainViewModel: IDisposable
     IReactiveObject? CurrentPage { get; }
 }
 
-internal sealed class MainViewModel: ReactiveObject, IMainViewModel
+public sealed class MainViewModel: ReactiveObject, IMainViewModel
 {
     public MainViewModel(IRequestViewModelFactory requestViewModelFactory, IProjectViewModel projectViewModel)
     {
@@ -45,6 +45,6 @@ internal sealed class MainViewModel: ReactiveObject, IMainViewModel
 
     public void Dispose()
     {
-        throw new NotImplementedException();
+        ProjectViewModel.Dispose();
     }
 }
