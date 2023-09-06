@@ -19,6 +19,13 @@
                 <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
                 <Setter Property="Padding" Value="8 0" />
             </Style>
+            <Style Selector="DataGridCell AutoCompleteBox.keyValueDataGrid__textEditCell">
+                <Setter Property="Height" Value="50" />
+                <Setter Property="FontSize" Value="22" />
+                <Setter Property="FontWeight" Value="Medium" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Padding" Value="8 10" />
+            </Style>
         </Styles>
     </Style>
 

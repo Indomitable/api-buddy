@@ -4,10 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mvvm="clr-namespace:Api.Buddy.Main.UI.MVVM"
              xmlns:models="clr-namespace:Api.Buddy.Main.Logic.Models;assembly=Api.Buddy.Main.Logic"
+             xmlns:headers="clr-namespace:Api.Buddy.Main.UI.Resources"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Api.Buddy.Main.UI.Controls.Request.RequestHeaders"
              x:DataType="mvvm:RequestInitViewModel"
              x:CompileBindings="True">
+    <UserControl.Resources>
+        <headers:HttpHeaders x:Key="HttpHeaders"  />
+    </UserControl.Resources>
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal">
             <Button FontSize="20"
@@ -23,7 +27,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Panel Width="70">
-                                <CheckBox HorizontalAlignment="Center" IsThreeState="False" IsChecked="{Binding Selected}"></CheckBox>
+                                <CheckBox HorizontalAlignment="Center" IsThreeState="False" IsChecked="{Binding Selected}" />
                             </Panel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -32,12 +36,13 @@
                                         CanUserSort="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Name}" Classes="keyValueDataGrid__textCell"></TextBlock>
+                            <TextBlock Text="{Binding Name}" Classes="keyValueDataGrid__textCell" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding Name}" Classes="keyValueDataGrid__textEditCell"></TextBox>
+                            <AutoCompleteBox Text="{Binding Name}" Classes="keyValueDataGrid__textEditCell"
+                                             FilterMode="StartsWithOrdinal" ItemsSource="{StaticResource HttpHeaders}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
@@ -45,12 +50,12 @@
                                             CanUserSort="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Value}" Classes="keyValueDataGrid__textCell"></TextBlock>
+                            <TextBlock Text="{Binding Value}" Classes="keyValueDataGrid__textCell" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding Value}" Classes="keyValueDataGrid__textEditCell"></TextBox>
+                            <TextBox Text="{Binding Value}" Classes="keyValueDataGrid__textEditCell" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
