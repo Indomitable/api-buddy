@@ -5,14 +5,9 @@ namespace Api.Buddy.Main.Logic.Models.Project;
 
 public abstract class ProjectNode: ReactiveObject
 {
-    protected ProjectNode()
-    {
-        Children = new AvaloniaList<ProjectNode>();
-    }
-
     public ProjectNode? Parent { get; set; }
 
-    public AvaloniaList<ProjectNode> Children { get; }
+    public AvaloniaList<ProjectNode> Children { get; } = new();
 
     public NodeType NodeType { get; protected set; }
 

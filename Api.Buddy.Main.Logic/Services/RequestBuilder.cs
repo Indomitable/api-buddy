@@ -14,12 +14,7 @@ public interface IRequestBuilder
 
 internal sealed class RequestBuilder : IRequestBuilder
 {
-    private RequestInit requestInit;
-
-    public RequestBuilder()
-    {
-        requestInit = RequestInit.Empty;
-    }
+    private RequestInit requestInit = RequestInit.Empty;
 
     public IRequestBuilder SetMethod(HttpMethod method)
     {
