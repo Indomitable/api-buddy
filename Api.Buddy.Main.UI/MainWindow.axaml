@@ -11,8 +11,7 @@
         x:Class="Api.Buddy.Main.UI.MainWindow"
         x:CompileBindings="True"
         x:DataType="vm:MainViewModel"
-        MinHeight="800"
-        MinWidth="1200"
+        MinHeight="800" MinWidth="1200" WindowStartupLocation="CenterScreen"
         Title="Api.Buddy.Main.UI">
     <Grid ColumnDefinitions="350 *">
         <project:ProjectView Grid.Column="0" DataContext="{Binding ProjectViewModel}" />

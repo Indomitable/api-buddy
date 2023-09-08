@@ -19,6 +19,13 @@ public partial class TextInputDialog : ReactiveWindow<TextInputDialogViewModel>
         });
     }
 
+    protected override void OnOpened(EventArgs e)
+    {
+        InputBox.Focus();
+        InputBox.SelectAll();
+        base.OnOpened(e);
+    }
+
     private void OnClose(object? sender, RoutedEventArgs e)
     {
         Close();
