@@ -16,6 +16,7 @@
                  Height="40" VerticalAlignment="Center"
                  VerticalContentAlignment="Center" FontSize="18"
                  Focusable="True" TabIndex="0" IsTabStop="True"
+                 KeyUp="InputBox_OnKeyUp"
                  Text="{Binding Input, Mode=TwoWay}" />
         <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal"
                     HorizontalAlignment="Stretch" Spacing="10" FlowDirection="RightToLeft">

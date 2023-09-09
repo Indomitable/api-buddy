@@ -1,4 +1,5 @@
 using System;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
@@ -29,5 +30,13 @@ public partial class TextInputDialog : ReactiveWindow<TextInputDialogViewModel>
     private void OnClose(object? sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private void InputBox_OnKeyUp(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Return)
+        {
+            Close(InputBox.Text);
+        }
     }
 }
