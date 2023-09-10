@@ -3,18 +3,33 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mvvm="clr-namespace:Api.Buddy.Main.UI.MVVM"
+             xmlns:controls="clr-namespace:Api.Buddy.Main.UI.Controls.Request"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Api.Buddy.Main.UI.Controls.Request.ResponseView"
              x:DataType="mvvm:ResponseViewModel"
              x:CompileBindings="True">
-    <TabControl SelectedIndex="0">
-        <TabItem ContentTemplate="{Binding BodyDisplayDataTemplateSelector.BodyTemplate}" 
-                 Content="{Binding Body}"
-                 IsVisible="{Binding Body}">
-            <TabItem.Header>Body</TabItem.Header>
-        </TabItem>
-        <TabItem>
-            <TabItem.Header>Headers</TabItem.Header>
-        </TabItem>
-    </TabControl>
+    <DockPanel>
+        <Border IsVisible="{Binding HasResponse}"
+                DockPanel.Dock="Bottom" Height="30" BorderThickness="0, 1, 0, 0" BorderBrush="LightGray" >
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Version}" Margin="0, 0, 10, 0" />
+                <TextBlock Text="Status:" Margin="0, 0, 3, 0" />
+                <TextBlock Text="{Binding StatusCode}" Margin="0, 0, 10, 0" />
+                <TextBlock Text="Duration:" Margin="0, 0, 3, 0" />
+                <TextBlock Text="{Binding Duration}" Margin="0, 0, 10, 0" />
+                <TextBlock IsVisible="{Binding !!ContentSize}" Text="Size:" Margin="0, 0, 3, 0" />
+                <TextBlock IsVisible="{Binding !!ContentSize}" Text="{Binding ContentSize}" Margin="0, 0, 10, 0" />
+            </StackPanel>
+        </Border>
+        <TabControl SelectedIndex="0">
+            <TabItem Header="Body"
+                     ContentTemplate="{Binding BodyDisplayDataTemplateSelector.BodyTemplate}" 
+                     Content="{Binding Body}"
+                     IsVisible="{Binding Body}">
+            </TabItem>
+            <TabItem Header="Headers">
+                <controls:ResponseHeaders DataContext="{Binding ResponseHeadersViewModel}" />
+            </TabItem>
+        </TabControl>
+    </DockPanel>
 </UserControl>

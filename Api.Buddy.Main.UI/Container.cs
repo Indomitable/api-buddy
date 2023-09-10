@@ -1,4 +1,6 @@
 using System;
+using System.Net.Http;
+using System.Net.Security;
 using Api.Buddy.Main.Logic;
 using Api.Buddy.Main.Dialogs;
 using Api.Buddy.Main.UI.Controls.Request;
@@ -16,12 +18,28 @@ public static class Container
     static Container()
     {
         Services = new ServiceCollection()
-            .AddHttpClient()
+            .AddHttp()
             .AddLogic()
             .AddServices()
             .AddViewModels()
             .AddControls()
             .AddDialogs();
+    }
+
+    private static IServiceCollection AddHttp(this IServiceCollection collection)
+    {
+        collection.AddHttpClient("").ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+        {
+            // Make these configurable
+            // don't follow redirects
+            // AllowAutoRedirect = false,
+            // SslOptions = new SslClientAuthenticationOptions
+            // {
+            //     // ignore certificate errors.
+            //     RemoteCertificateValidationCallback = ((_, _, _, _) => false)
+            // },
+        });
+        return collection;
     }
 
     private static IServiceCollection AddViewModels(this IServiceCollection collection)

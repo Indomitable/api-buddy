@@ -16,7 +16,6 @@ internal static class RequestInitExtensions
             .GroupBy(h => h.Name)
             .Select(gr => (Name: gr.Key, Values: gr.Select(h => h.Value).ToList()));
 
-
         foreach (var (name, values) in group)
         {
             if (values.Count == 1)

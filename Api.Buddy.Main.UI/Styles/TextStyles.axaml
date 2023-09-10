@@ -12,4 +12,10 @@
     <Style Selector="TextBlock.largeText">
         <Setter Property="FontSize" Value="18" />
     </Style>
+    <Style Selector="TextBlock.weight-500">
+        <Setter Property="FontWeight" Value="500" />
+    </Style>
+    <Style Selector="TextBlock.weight-600">
+        <Setter Property="FontWeight" Value="600" />
+    </Style>
 </Styles>

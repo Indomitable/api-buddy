@@ -16,6 +16,7 @@
         <StyleInclude Source="/Styles/DataGridStyles.axaml" />
         <StyleInclude Source="/Styles/MaterialIcons.axaml" />
         <StyleInclude Source="/Styles/TextStyles.axaml" />
+        <StyleInclude Source="/Styles/ComponentStyles.axaml" />
         <StyleInclude Source="/TemplateControls/EditableMenuItem.axaml" />
         <StyleInclude Source="/TemplateControls/ReadonlyMenuItem.axaml" />
     </Application.Styles>

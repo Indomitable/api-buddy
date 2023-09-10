@@ -13,36 +13,35 @@
         <controls:RequestBodyVisibilityConverter x:Key="RequestBodyVisibilityConverter" />
     </UserControl.Resources>
     <StackPanel Orientation="Vertical">
-        <DockPanel HorizontalAlignment="Stretch" Height="60" LastChildFill="True">
-            <ComboBox DockPanel.Dock="Left" Width="150" Height="50"
+        <DockPanel HorizontalAlignment="Stretch" Height="50" LastChildFill="True">
+            <ComboBox DockPanel.Dock="Left" Width="150" Height="40"
                       ItemsSource="{Binding Methods}"
                       SelectedItem="{Binding Request.Method}"
                       Margin="5">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding .}" FontSize="20"></TextBlock>
+                        <TextBlock Text="{Binding .}" FontSize="16"></TextBlock>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
             <Panel DockPanel.Dock="Right" Width="150" HorizontalAlignment="Right" Margin="0 0 5 0">
-                <Button DockPanel.Dock="Right" Width="150" Height="50" FontSize="20" FontWeight="DemiBold"
+                <Button DockPanel.Dock="Right" Width="150" Height="40" FontSize="16" FontWeight="DemiBold"
                         HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                         Command="{Binding SendCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:RequestDetails}}">Send</Button>
             </Panel>
             <Panel HorizontalAlignment="Stretch" Margin="5">
-                <TextBox Height="50" Text="{Binding Request.Url}"
+                <TextBox Height="40" Text="{Binding Request.Url}"
                          VerticalContentAlignment="Center"
-                         Padding="5" FontSize="20"></TextBox>
+                         Padding="5" FontSize="16"></TextBox>
             </Panel>
         </DockPanel>
-        <TabControl SelectedIndex="1">
-            <TabItem IsVisible="{Binding Request.Method, Converter={StaticResource RequestBodyVisibilityConverter}}">
-                <TabItem.Header>Body</TabItem.Header>
-                <!-- <body:RequestBodyText IsVisible="{Binding Method, Converter={StaticResource RequestBodyVisibilityConverter}}"/> -->
-            </TabItem>
-            <TabItem>
-                <TabItem.Header>Headers</TabItem.Header>
+        <TabControl SelectedIndex="0">
+            <TabItem Header="Headers">
                 <controls:RequestHeaders />
+            </TabItem>
+            <TabItem Header="Body" 
+                IsVisible="{Binding Request.Method, Converter={StaticResource RequestBodyVisibilityConverter}}">
+                <!-- <body:RequestBodyText IsVisible="{Binding Method, Converter={StaticResource RequestBodyVisibilityConverter}}"/> -->
             </TabItem>
         </TabControl>
     </StackPanel>

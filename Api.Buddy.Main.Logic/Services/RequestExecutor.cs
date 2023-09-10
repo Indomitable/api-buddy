@@ -1,4 +1,7 @@
 using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Api.Buddy.Main.Logic.Extensions;
@@ -8,8 +11,11 @@ namespace Api.Buddy.Main.Logic.Services;
 
 public interface IRequestExecutor
 {
-    Task<HttpResponseMessage?> Execute(RequestInit requestInit);
+    Task<HttpResponse?> Execute(RequestInit requestInit);
 }
+
+public record HttpResponse(HttpResponseMessage Message, TimeSpan Duration);
+    
 
 internal sealed class RequestExecutor : IRequestExecutor
 {
@@ -22,7 +28,7 @@ internal sealed class RequestExecutor : IRequestExecutor
         this.mapper = mapper;
     }
 
-    public async Task<HttpResponseMessage?> Execute(RequestInit requestInit)
+    public async Task<HttpResponse?> Execute(RequestInit requestInit)
     {
         try
         {
@@ -31,8 +37,11 @@ internal sealed class RequestExecutor : IRequestExecutor
             message.Method = mapper.ToSystemHttpMethod(requestInit.Method);
             message.RequestUri = requestInit.BuildUri();
             message.Headers.AddRange(requestInit.Headers);
+            message.Version = new Version(3, 0);
+            var stopwatch = Stopwatch.StartNew();
             var response = await client.SendAsync(message);
-            return response; // TODO: return custom object
+            stopwatch.Stop();
+            return new HttpResponse(response, stopwatch.Elapsed);
         }
         catch (Exception)
         {

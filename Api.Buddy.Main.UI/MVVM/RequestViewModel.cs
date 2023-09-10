@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Reactive.Disposables;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,10 +45,19 @@ internal sealed class RequestViewModel : ReactiveObject, IRequestViewModel
             .SetUrl(RequestInit.Request.Url)
             .SetHeaders(RequestInit.Request.Headers)
             .Build();
-        var responseMessage = await requestExecutor.Execute(requestInit);
-        if (responseMessage is not null)
+        HttpResponseMessage? message = null;
+        try
         {
-            await Response.SetResponse(responseMessage, cancellationToken);
+            var response = await requestExecutor.Execute(requestInit);
+            if (response is not null)
+            {
+                message = response.Message;
+                await Response.SetResponse(response, cancellationToken);
+            }
+        }
+        finally
+        {
+            message?.Dispose();
         }
     }
 
