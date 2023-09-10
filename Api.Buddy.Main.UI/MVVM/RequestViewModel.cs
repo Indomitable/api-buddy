@@ -1,3 +1,5 @@
+using System;
+using System.Reactive.Disposables;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -8,7 +10,7 @@ using ReactiveUI;
 
 namespace Api.Buddy.Main.UI.MVVM;
 
-public interface IRequestViewModel: IReactiveObject
+public interface IRequestViewModel: IReactiveObject, IDisposable
 {
     ICommand SendCommand { get; }
 }
@@ -17,13 +19,14 @@ internal sealed class RequestViewModel : ReactiveObject, IRequestViewModel
 {
     private readonly IRequestBuilder requestBuilder;
     private readonly IRequestExecutor requestExecutor;
+    private readonly CompositeDisposable disposable = new ();
 
     public RequestViewModel(IRequestBuilder requestBuilder, IRequestExecutor requestExecutor,
         IResponseViewModel responseViewModel, IStateManager stateManager, RequestNode requestNode)
     {
         this.requestBuilder = requestBuilder;
         this.requestExecutor = requestExecutor;
-        RequestInit = new RequestInitViewModel(stateManager, requestNode);
+        RequestInit = new RequestInitViewModel(stateManager, requestNode).DisposeWith(disposable);
         Response = responseViewModel;
         SendCommand = ReactiveCommand.CreateFromTask(Send);
     }
@@ -46,5 +49,10 @@ internal sealed class RequestViewModel : ReactiveObject, IRequestViewModel
         {
             await Response.SetResponse(responseMessage, cancellationToken);
         }
+    }
+
+    public void Dispose()
+    {
+        disposable.Dispose();
     }
 }

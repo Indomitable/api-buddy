@@ -32,7 +32,14 @@ public sealed class MainViewModel: ReactiveObject, IMainViewModel
     public IReactiveObject CurrentPage
     {
         get => currentPage;
-        set => this.RaiseAndSetIfChanged(ref currentPage, value);
+        set
+        {
+            if (currentPage is IRequestViewModel requestViewModel)
+            {
+                requestViewModel.Dispose();
+            }
+            this.RaiseAndSetIfChanged(ref currentPage, value);
+        }
     }
 
     public IProjectViewModel ProjectViewModel { get; }

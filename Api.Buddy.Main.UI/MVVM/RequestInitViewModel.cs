@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reactive.Disposables;
 using Api.Buddy.Main.Logic.Models.Project;
 using Api.Buddy.Main.Logic.Models.Request;
 using Api.Buddy.Main.Logic.Storage;
@@ -9,7 +10,7 @@ using ReactiveUI;
 
 namespace Api.Buddy.Main.UI.MVVM;
 
-public interface IRequestInitViewModel
+public interface IRequestInitViewModel: IDisposable
 {
     RequestNode Request { get; }
     IReadOnlyList<HttpMethod> Methods { get; }
@@ -17,17 +18,21 @@ public interface IRequestInitViewModel
 
 public class RequestInitViewModel : ReactiveObject, IRequestInitViewModel
 {
+    private readonly CompositeDisposable disposables = new();
     public RequestInitViewModel(IStateManager stateManager, RequestNode request)
     {
         this.request = request;
         this.request.WhenAnyPropertyChanged(nameof(RequestNode.Method), nameof(RequestNode.Url))
-            .Subscribe(_ => stateManager.Persist());
+            .Subscribe(_ => stateManager.Persist())
+            .DisposeWith(disposables);
         this.request.Headers.ToObservableChangeSet<ObservableCollectionExtended<Header>, Header>()
             .AutoRefresh()
-            .Subscribe(_ => stateManager.Persist());
+            .Subscribe(_ => stateManager.Persist())
+            .DisposeWith(disposables);
         this.request.QueryParams.ToObservableChangeSet<ObservableCollectionExtended<QueryParam>, QueryParam>()
             .AutoRefresh()
-            .Subscribe(_ => stateManager.Persist());
+            .Subscribe(_ => stateManager.Persist())
+            .DisposeWith(disposables);
     }
     
     public IReadOnlyList<HttpMethod> Methods { get; } = Enum.GetValues<HttpMethod>();
@@ -39,7 +44,6 @@ public class RequestInitViewModel : ReactiveObject, IRequestInitViewModel
         get => request;
         set => this.RaiseAndSetIfChanged(ref request, value);
     }
-    
 
     public void AddHeader()
     { 
@@ -49,5 +53,10 @@ public class RequestInitViewModel : ReactiveObject, IRequestInitViewModel
     public void RemoveHeader(Header header)
     {
         Request.Headers.Remove(header);
+    }
+
+    public void Dispose()
+    {
+        disposables.Dispose();
     }
 }
