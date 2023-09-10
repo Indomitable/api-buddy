@@ -14,19 +14,19 @@ internal sealed class RequestViewModelFactory : IRequestViewModelFactory
     private readonly IRequestBuilder requestBuilder;
     private readonly IRequestExecutor requestExecutor;
     private readonly IResponseViewModel responseViewModel;
-    private readonly IStorageManager storageManager;
+    private readonly IStateManager stateManager;
 
     public RequestViewModelFactory(IRequestBuilder requestBuilder, IRequestExecutor requestExecutor, IResponseViewModel responseViewModel, 
-        IStorageManager storageManager)
+        IStateManager stateManager)
     {
         this.requestBuilder = requestBuilder;
         this.requestExecutor = requestExecutor;
         this.responseViewModel = responseViewModel;
-        this.storageManager = storageManager;
+        this.stateManager = stateManager;
     }
 
     public IRequestViewModel Create(RequestNode requestNode)
     {
-        return new RequestViewModel(requestBuilder, requestExecutor, responseViewModel, storageManager, requestNode);
+        return new RequestViewModel(requestBuilder, requestExecutor, responseViewModel, stateManager, requestNode);
     }
 }

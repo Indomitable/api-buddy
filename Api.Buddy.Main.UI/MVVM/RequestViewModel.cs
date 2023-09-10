@@ -19,11 +19,11 @@ internal sealed class RequestViewModel : ReactiveObject, IRequestViewModel
     private readonly IRequestExecutor requestExecutor;
 
     public RequestViewModel(IRequestBuilder requestBuilder, IRequestExecutor requestExecutor,
-        IResponseViewModel responseViewModel, IStorageManager storageManager, RequestNode requestNode)
+        IResponseViewModel responseViewModel, IStateManager stateManager, RequestNode requestNode)
     {
         this.requestBuilder = requestBuilder;
         this.requestExecutor = requestExecutor;
-        RequestInit = new RequestInitViewModel(storageManager, requestNode);
+        RequestInit = new RequestInitViewModel(stateManager, requestNode);
         Response = responseViewModel;
         SendCommand = ReactiveCommand.CreateFromTask(Send);
     }

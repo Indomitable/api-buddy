@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Api.Buddy.Main.Logic.Models.Project;
 using Api.Buddy.Main.Logic.Models.Request;
 using Api.Buddy.Main.Logic.Storage;
+using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
 
@@ -16,9 +17,17 @@ public interface IRequestInitViewModel
 
 public class RequestInitViewModel : ReactiveObject, IRequestInitViewModel
 {
-    public RequestInitViewModel(IStorageManager storageManager, RequestNode request)
+    public RequestInitViewModel(IStateManager stateManager, RequestNode request)
     {
         this.request = request;
+        this.request.WhenAnyPropertyChanged(nameof(RequestNode.Method), nameof(RequestNode.Url))
+            .Subscribe(_ => stateManager.Persist());
+        this.request.Headers.ToObservableChangeSet<ObservableCollectionExtended<Header>, Header>()
+            .AutoRefresh()
+            .Subscribe(_ => stateManager.Persist());
+        this.request.QueryParams.ToObservableChangeSet<ObservableCollectionExtended<QueryParam>, QueryParam>()
+            .AutoRefresh()
+            .Subscribe(_ => stateManager.Persist());
     }
     
     public IReadOnlyList<HttpMethod> Methods { get; } = Enum.GetValues<HttpMethod>();
@@ -34,13 +43,7 @@ public class RequestInitViewModel : ReactiveObject, IRequestInitViewModel
 
     public void AddHeader()
     { 
-        Request.Headers.Add(new Header
-        {
-            Index = Request.Headers.Count,
-            Name = string.Empty,
-            Value = string.Empty,
-            Selected = true
-        });
+        Request.Headers.Add(new Header(Request.Headers.Count, string.Empty, string.Empty, true));
     }
 
     public void RemoveHeader(Header header)

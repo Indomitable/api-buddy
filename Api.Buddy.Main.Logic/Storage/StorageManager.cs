@@ -20,7 +20,6 @@ public interface IStorageManager
 
 internal sealed class StorageManager : IStorageManager
 {
-    private readonly string folderName;
     private readonly string projectSave;
     private readonly JsonSerializerOptions options;
     
@@ -32,7 +31,7 @@ internal sealed class StorageManager : IStorageManager
 
     public StorageManager()
     {
-        folderName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "api-buddy");
+        var folderName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "api-buddy");
         if (!Directory.Exists(folderName))
         {
             Directory.CreateDirectory(folderName);
@@ -48,51 +47,6 @@ internal sealed class StorageManager : IStorageManager
         };
     }
 
-   
-    // public void UpdateRequest(RequestNode request)
-    // {
-    //     var parents = new Stack<string>();
-    //     for (var parent = request.Parent; parent != null; parent = parent.Parent)
-    //     {
-    //         parents.Push(parent.Name);
-    //     }
-    //     var dto = Read();
-    //     var project = dto.Projects.FirstOrDefault(p => p.Id == request.Project.Id) 
-    //                   ?? new ProjectDto { Id = request.Project.Id, Name = "Unknown project", Nodes = new List<ProjectNodeDto>() };
-    //     var nodes = project.Nodes;
-    //     while (parents.Count > 0)
-    //     {
-    //         var parent = parents.Pop();
-    //         var parentNode = nodes.OfType<FolderNodeDto>().FirstOrDefault(n => n.Name == parent);
-    //         if (parentNode is null)
-    //         {
-    //             parentNode = new FolderNodeDto
-    //             {
-    //                 Name = parent,
-    //                 Children = new List<ProjectNodeDto>()
-    //             };
-    //             nodes.Add(parentNode);
-    //         }
-    //         nodes = parentNode.Children;
-    //     }
-    //     var found = nodes.OfType<RequestNodeDto>().FirstOrDefault(s => string.Equals(s.Name, request.Name, StringComparison.Ordinal));
-    //     if (found is null)
-    //     {
-    //         nodes.Add(ToDto(request));
-    //     }
-    //     else
-    //     {
-    //         found.Name = request.Name;
-    //         found.Url = request.Url;
-    //         found.Method = request.Method;
-    //         found.QueryParams = request.QueryParams
-    //             .Select(p => new IndexedKeyValueDto(p.Index, p.Name, p.Value, p.Selected)).ToList();
-    //         found.Headers = request.Headers.Select(p => new IndexedKeyValueDto(p.Index, p.Name, p.Value, p.Selected))
-    //             .ToList();
-    //     }
-    //     Write(dto);
-    // }
-
     public void Save(Storage storage)
     {
         var dto = new StorageDto { Projects = ToDto(storage.Projects), SelectedProject = storage.SelectedProject };
@@ -102,7 +56,7 @@ internal sealed class StorageManager : IStorageManager
     public Storage Load()
     {
         var dto = Read();
-        return new Storage(ToDomain(dto?.Projects), dto?.SelectedProject);
+        return new Storage(ToDomain(dto.Projects), dto?.SelectedProject);
     }
 
     private StorageDto Read()
@@ -193,13 +147,7 @@ internal sealed class StorageManager : IStorageManager
                         Url = rn.Url
                     };
                     requestNode.QueryParams.AddRange(rn.QueryParams.Select(qp => new QueryParam(qp.Index, qp.Name, qp.Value, qp.Selected)));
-                    requestNode.Headers.AddRange(rn.Headers.Select(h => new Header
-                    {
-                        Index = h.Index,
-                        Name = h.Name,
-                        Value = h.Value,
-                        Selected = h.Selected
-                    }));
+                    requestNode.Headers.AddRange(rn.Headers.Select(h => new Header(h.Index, h.Name, h.Value, h.Selected)));
                     yield return requestNode;
                     break;
                 default:

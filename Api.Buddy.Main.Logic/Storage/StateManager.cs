@@ -20,8 +20,8 @@ public interface IStateManager
     void ChangeFolderName(FolderNode folder, string newName);
     void DeleteFolder(FolderNode folder);
     RequestNode AddRequestNode(string name, FolderNode parentFolder);
-    void UpdateRequest(RequestNode request);
     void DeleteRequest(RequestNode request);
+    void Persist();
 }
 
 public class StateManager : ReactiveObject, IStateManager
@@ -29,9 +29,6 @@ public class StateManager : ReactiveObject, IStateManager
     private readonly IStorageManager storageManager;
 
     private readonly SourceList<Project> projects;
-    // private readonly CompositeDisposable disposables;
-    // private IEnumerable<Project>? watchedProjects;
-    // private Dictionary<Guid, IDisposable> wathables;
 
     public StateManager(IStorageManager storageManager)
     {
@@ -51,7 +48,7 @@ public class StateManager : ReactiveObject, IStateManager
         set
         {
             this.RaiseAndSetIfChanged(ref activeProject, value);
-            UpdateStorage();
+            Persist();
         }
     }
 
@@ -74,7 +71,7 @@ public class StateManager : ReactiveObject, IStateManager
         var item = new Project(Guid.NewGuid(), name);
         projects.Add(item);
         ActiveProject = item;
-        UpdateStorage();
+        Persist();
     }
     
     public void UpdateProject(Project project)
@@ -98,14 +95,14 @@ public class StateManager : ReactiveObject, IStateManager
         {
             parentFolder.Children.Insert(folder.GetIndex(folder), folder);
         }
-        UpdateStorage();
+        Persist();
         return folder;
     }
     
     public void ChangeFolderName(FolderNode folder, string newName)
     {
         folder.Name = newName;
-        UpdateStorage();
+        Persist();
     }
     
     public void DeleteFolder(FolderNode folder)
@@ -121,13 +118,8 @@ public class StateManager : ReactiveObject, IStateManager
             Url = "https://",
         };
         parentFolder.Children.Insert(parentFolder.GetIndex(request), request);
-        UpdateStorage();
+        Persist();
         return request;
-    }
-    
-    public void UpdateRequest(RequestNode request)
-    {
-        
     }
     
     public void DeleteRequest(RequestNode request)
@@ -135,162 +127,9 @@ public class StateManager : ReactiveObject, IStateManager
         throw new NotImplementedException();
     }
 
-    private void UpdateStorage()
+    public void Persist()
     {
         var storage = new Storage(projects.Items, ActiveProject?.Id);
         storageManager.Save(storage);
     }
-
-    // private IEnumerable<Project> AddProjectNode(IEnumerable<Project> projects, ProjectNode node)
-    // {
-    //     foreach (var project in projects)
-    //     {
-    //         if (node.Project.Id == project.Id)
-    //         {
-    //             yield return AddProjectNode(project, node);
-    //         }
-    //         else
-    //         {
-    //             yield return project;
-    //         }
-    //     }
-    // }
-
-    // private Project AddProjectNode(Project project, ProjectNode node)
-    // {
-    //     if (node.Parent is null)
-    //     {
-    //         project.Nodes.Add(node);
-    //         return project;
-    //     }
-    //     else
-    //     {
-    //         var parent = FindParent(project.Nodes.OfType<FolderNode>(), node);
-    //         if (parent is not null)
-    //         {
-    //             parent.Children
-    //         }
-    //     }
-    // }
-
-    // private FolderNode? FindParent(IEnumerable<FolderNode> nodes, ProjectNode node)
-    // {
-    //     foreach (var projectNode in nodes)
-    //     {
-    //         return node.Parent!.Id == projectNode.Id 
-    //             ? projectNode 
-    //             : FindParent(projectNode.Children.OfType<FolderNode>(), node);
-    //     }
-    //     return null;
-    // }
-
-    // public void Watch(IObservableCollection<Project> projects)
-    // {
-    //     watchedProjects = projects;
-    //     WatchCollectionForChanges(projects, disposables);
-    //     foreach (var project in projects)
-    //     {
-    //         WatchProject(project, disposables);
-    //     }
-    // }
-    //
-    // private void WatchCollectionForChanges<T>(IObservableCollection<T> nodes, CompositeDisposable parentDisposable)
-    //     where T: INode
-    // {
-    //     nodes.ToObservableChangeSet<IObservableCollection<INode>, INode>().Subscribe(changes =>
-    //     {
-    //         foreach (var change in changes)
-    //         {
-    //             switch (change.Reason)
-    //             {
-    //                 case ListChangeReason.Add:
-    //                     WatchNode(change.Item.Current, parentDisposable);
-    //                     break;
-    //                 case ListChangeReason.Remove:
-    //                 {
-    //                     var id = change.Item.Current.Id;
-    //                     if (wathables.TryGetValue(id, out var d))
-    //                     {
-    //                         d.Dispose();
-    //                     }
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //     }).DisposeWith(parentDisposable);
-    // }
-    //
-    // private void WatchNode(INode node, CompositeDisposable parentDisposable)
-    // {
-    //     switch (node)
-    //     {
-    //         case Project project:
-    //             WatchProject(project, parentDisposable);
-    //             break;
-    //         case FolderNode folderNode:
-    //             WatchFolderNode(folderNode, parentDisposable);
-    //             break;
-    //         case RequestNode requestNode:
-    //             WatchRequestNode(requestNode, parentDisposable);
-    //             break;
-    //         default:
-    //             throw new ArgumentOutOfRangeException(nameof(node));
-    //     }
-    // }
-    //
-    // private void WatchProject(Project project, CompositeDisposable parentDisposable)
-    // {
-    //     var disposable = new CompositeDisposable().DisposeWith(parentDisposable);
-    //     project.WhenAnyValue(p => p.Name).Subscribe(_ => Save()).DisposeWith(disposable);
-    //     WatchProjectNodes(project.Nodes, disposable);
-    //     wathables.Add(project.Id, disposable);
-    // }
-    //
-    // private void WatchProjectNodes(IObservableCollection<ProjectNode> nodes, CompositeDisposable parentDisposable)
-    // {
-    //     WatchCollectionForChanges(nodes, parentDisposable);
-    //     foreach (var node in nodes)
-    //     {
-    //         switch (node)
-    //         {
-    //             case FolderNode fn:
-    //                 WatchFolderNode(fn, parentDisposable);
-    //                 break;
-    //             case RequestNode rn:
-    //                 WatchRequestNode(rn, parentDisposable);
-    //                 break;
-    //         }
-    //     }
-    // }
-    //
-    // private void WatchFolderNode(FolderNode fn, CompositeDisposable parentDisposable)
-    // {
-    //     var disposable = new CompositeDisposable().DisposeWith(parentDisposable);
-    //     fn.WhenAnyValue(n => n.Name).Subscribe(_ => Save()).DisposeWith(disposable);
-    //     WatchProjectNodes(fn.Children, disposable);
-    //     wathables.Add(fn.Id, disposable);
-    // }
-    //
-    // private void WatchRequestNode(RequestNode rn, CompositeDisposable parentDisposable)
-    // {
-    //     var disposable = new CompositeDisposable().DisposeWith(parentDisposable);
-    //     rn.WhenAnyValue(n => n.Name).Subscribe(_ => Save()).DisposeWith(disposable);
-    //     rn.WhenAnyValue(n => n.Method).Subscribe(_ => Save()).DisposeWith(disposable);
-    //     rn.WhenAnyValue(n => n.Url).Subscribe(_ => Save()).DisposeWith(disposable);
-    //     wathables.Add(rn.Id, disposable);
-    // }
-    //
-    //
-    // private void Save()
-    // {
-    //     if (watchedProjects is not null)
-    //     {
-    //         storageManager.UpdateProjects(watchedProjects);
-    //     }
-    // }
-    //
-    // public void Dispose()
-    // {
-    //     disposables.Dispose();
-    // }
 }

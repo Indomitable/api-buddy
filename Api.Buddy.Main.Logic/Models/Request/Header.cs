@@ -1,30 +1,8 @@
-using ReactiveUI;
-
 namespace Api.Buddy.Main.Logic.Models.Request;
 
-public class Header : ReactiveObject
+public class Header: KeyValueParam
 {
-    public required int Index { get; init; }
-
-    private string name = string.Empty;
-    public string Name
+    public Header(int index, string name, string value, bool selected) : base(index, name, value, selected)
     {
-        get => name;
-        set => this.RaiseAndSetIfChanged(ref name, value);
-    }
-
-    private string value = string.Empty;
-    public string Value
-    {
-        get => value;
-        set => this.RaiseAndSetIfChanged(ref this.value, value);
-    }
-
-    private bool selected = true;
-    public bool Selected
-    {
-        get => selected;
-        set => this.RaiseAndSetIfChanged(ref selected, value);
     }
 }
-
