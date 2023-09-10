@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Api.Buddy.Main.UI.MVVM"
              xmlns:controls="clr-namespace:Api.Buddy.Main.UI.Controls.Request"
-             xmlns:body="clr-namespace:Api.Buddy.Main.UI.Controls.Request.Body"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Api.Buddy.Main.UI.Controls.Request.RequestDetails"
              x:CompileBindings="True"
@@ -17,7 +16,7 @@
         <DockPanel HorizontalAlignment="Stretch" Height="60" LastChildFill="True">
             <ComboBox DockPanel.Dock="Left" Width="150" Height="50"
                       ItemsSource="{Binding Methods}"
-                      SelectedItem="{Binding Method}"
+                      SelectedItem="{Binding Request.Method}"
                       Margin="5">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
@@ -31,13 +30,13 @@
                         Command="{Binding SendCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=controls:RequestDetails}}">Send</Button>
             </Panel>
             <Panel HorizontalAlignment="Stretch" Margin="5">
-                <TextBox Height="50" Text="{Binding Url}"
+                <TextBox Height="50" Text="{Binding Request.Url}"
                          VerticalContentAlignment="Center"
                          Padding="5" FontSize="20"></TextBox>
             </Panel>
         </DockPanel>
         <TabControl SelectedIndex="1">
-            <TabItem IsVisible="{Binding Method, Converter={StaticResource RequestBodyVisibilityConverter}}">
+            <TabItem IsVisible="{Binding Request.Method, Converter={StaticResource RequestBodyVisibilityConverter}}">
                 <TabItem.Header>Body</TabItem.Header>
                 <!-- <body:RequestBodyText IsVisible="{Binding Method, Converter={StaticResource RequestBodyVisibilityConverter}}"/> -->
             </TabItem>

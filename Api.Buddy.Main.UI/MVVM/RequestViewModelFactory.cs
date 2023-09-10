@@ -1,5 +1,6 @@
 using Api.Buddy.Main.Logic.Models.Project;
 using Api.Buddy.Main.Logic.Services;
+using Api.Buddy.Main.Logic.Storage;
 
 namespace Api.Buddy.Main.UI.MVVM;
 
@@ -13,25 +14,19 @@ internal sealed class RequestViewModelFactory : IRequestViewModelFactory
     private readonly IRequestBuilder requestBuilder;
     private readonly IRequestExecutor requestExecutor;
     private readonly IResponseViewModel responseViewModel;
+    private readonly IStorageManager storageManager;
 
-    public RequestViewModelFactory(IRequestBuilder requestBuilder, IRequestExecutor requestExecutor, IResponseViewModel responseViewModel)
+    public RequestViewModelFactory(IRequestBuilder requestBuilder, IRequestExecutor requestExecutor, IResponseViewModel responseViewModel, 
+        IStorageManager storageManager)
     {
         this.requestBuilder = requestBuilder;
         this.requestExecutor = requestExecutor;
         this.responseViewModel = responseViewModel;
+        this.storageManager = storageManager;
     }
 
     public IRequestViewModel Create(RequestNode requestNode)
     {
-        var viewModel = new RequestViewModel(requestBuilder, requestExecutor, responseViewModel)
-        {
-            RequestInit =
-            {
-                Method = requestNode.Request.Method,
-                Url = requestNode.Request.Url
-            }
-        };
-        viewModel.RequestInit.Headers.AddRange(requestNode.Request.Headers);
-        return viewModel;
+        return new RequestViewModel(requestBuilder, requestExecutor, responseViewModel, storageManager, requestNode);
     }
 }

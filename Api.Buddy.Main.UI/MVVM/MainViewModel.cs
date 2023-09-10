@@ -16,22 +16,16 @@ public sealed class MainViewModel: ReactiveObject, IMainViewModel
     {
         ProjectViewModel = projectViewModel;
         currentPage = new EmptyViewModel();
-        ProjectViewModel.ObservableForProperty(vm => vm.SelectedNode)
-            .Subscribe(new AnonymousObserver<IObservedChange<IProjectViewModel, ProjectNode?>>((change) =>
+        ProjectViewModel.WhenAnyValue(vm => vm.SelectedNode)
+            .Subscribe(node =>
             {
-                switch (change.Value)
+                CurrentPage = node switch
                 {
-                    case RequestNode requestNode:
-                        CurrentPage = requestViewModelFactory.Create(requestNode);
-                        break;
-                    case FolderNode folderNode:
-                        CurrentPage = new FolderViewModel(folderNode);
-                        break;
-                    default:
-                        CurrentPage = new EmptyViewModel();
-                        break;
-                }
-            }));
+                    RequestNode requestNode => requestViewModelFactory.Create(requestNode),
+                    FolderNode folderNode => new FolderViewModel(folderNode),
+                    _ => new EmptyViewModel()
+                };
+            });
     }
 
     private IReactiveObject currentPage;

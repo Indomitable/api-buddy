@@ -1,17 +1,26 @@
-using Avalonia.Collections;
+using System;
 using ReactiveUI;
 
 namespace Api.Buddy.Main.Logic.Models.Project;
 
-public abstract class ProjectNode: ReactiveObject
+public abstract class ProjectNode: ReactiveObject, INode
 {
-    public ProjectNode? Parent { get; set; }
+    private string name;
 
-    public AvaloniaList<ProjectNode> Children { get; } = new();
+    protected ProjectNode(Guid id, string name, Project project, ProjectNode? parent = null)
+    {
+        Id = id;
+        this.name = name;
+        Project = project;
+        Parent = parent;
+    }
+    
+    public Guid Id { get; }
+    public ProjectNode? Parent { get; }
+    public abstract NodeType NodeType { get; }
+    
+    public Project Project { get; }
 
-    public NodeType NodeType { get; protected set; }
-
-    private string name = string.Empty;
     public string Name
     {
         get => name;

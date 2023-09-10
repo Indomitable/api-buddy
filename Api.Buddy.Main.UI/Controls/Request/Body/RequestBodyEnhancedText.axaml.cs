@@ -29,7 +29,7 @@ public partial class RequestBodyEnhancedText : UserControl
         };
     }
     
-    public IFoldingHandlerResolver FoldingHandlerResolver { get; set; }
+    public required IFoldingHandlerResolver FoldingHandlerResolver { get; init; }
 
     private void InitializeComponent()
     {

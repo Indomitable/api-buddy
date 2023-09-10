@@ -1,18 +1,25 @@
 using System;
-using Avalonia.Collections;
+using DynamicData.Binding;
 using ReactiveUI;
 
 namespace Api.Buddy.Main.Logic.Models.Project;
 
-public sealed class Project: ReactiveObject
+public sealed class Project: ReactiveObject, INode
 {
-    public required Guid Id { get; init; }
-    private string name = string.Empty;
+    public Project(Guid id, string name)
+    {
+        Id = id;
+        this.name = name;
+    }
+    
+    public Guid Id { get; }
+    
+    private string name;
     public string Name
     {
         get => name;
         set => this.RaiseAndSetIfChanged(ref name, value);
     }
 
-    public AvaloniaList<ProjectNode> Nodes { get; } = new();
+    public ObservableCollectionExtended<ProjectNode> Nodes { get; } = new();
 }

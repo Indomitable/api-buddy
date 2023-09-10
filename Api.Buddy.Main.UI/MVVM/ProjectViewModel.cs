@@ -1,35 +1,34 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Api.Buddy.Main.Dialogs.Services;
 using Api.Buddy.Main.Logic.Models.Project;
-using Api.Buddy.Main.Logic.Models.Request;
 using Api.Buddy.Main.Logic.Storage;
-using Avalonia.Collections;
+using DynamicData;
 using ReactiveUI;
 
 namespace Api.Buddy.Main.UI.MVVM;
 
 public interface IProjectViewModel: IDisposable
 {
-    AvaloniaList<Project> Projects { get; }
-    Project? Project { get; set; }
+    ReadOnlyObservableCollection<Project> Projects { get; }
+    Project? ActiveProject { get; set; }
     ProjectNode? SelectedNode { get; set; }
 }
 
 public sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
 {
     private readonly ITextInputDialogService textInputDialogService;
-    private readonly IStorageManager storageManager;
+    private readonly IStateManager stateManager;
     private readonly Subject<ProjectNode> nodeCreated;
 
-    public ProjectViewModel(ITextInputDialogService textInputDialogService, IStorageManager storageManager)
+    public ProjectViewModel(ITextInputDialogService textInputDialogService, IStateManager stateManager)
     {
         this.textInputDialogService = textInputDialogService;
-        this.storageManager = storageManager;
+        this.stateManager = stateManager;
         // var tdAdminNode = new FolderNode { Name = "Countries" };
         // var capitalsNode = new FolderNode { Name = "Capitals", Parent = tdAdminNode };
         // var getCapitals = new RequestNode
@@ -88,16 +87,10 @@ public sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
         //     }
         // };
 
+        stateManager.ConnectToProjects()
+            .Bind(out projects)
+            .Subscribe();
         
-        var storage = this.storageManager.Load();
-        Projects = new AvaloniaList<Project>(storage.Projects);
-        
-        this.WhenAnyValue(x => x.Project)
-            .Subscribe(p => this.storageManager.Save(Projects, p));
-        
-        Project = storage.SelectedProject.HasValue
-            ? Projects.FirstOrDefault(p => p.Id == storage.SelectedProject.Value)
-            : Projects.FirstOrDefault();
         CreateProjectCommand = ReactiveCommand.CreateFromTask(OnCreateProject);
         CreateTopFolderCommand = ReactiveCommand.CreateFromTask(OnCreateTopFolder);
         CreateFolderCommand = ReactiveCommand.CreateFromTask<FolderNode>(OnCreateFolder);
@@ -118,13 +111,21 @@ public sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
 
     public IObservable<ProjectNode> NodeCreated => nodeCreated;
 
-    public AvaloniaList<Project> Projects { get; }
+    private readonly ReadOnlyObservableCollection<Project> projects;
+    public ReadOnlyObservableCollection<Project> Projects => projects;
 
-    private Project? project;
-    public Project? Project
+    public Project? ActiveProject
     {
-        get => project;
-        set => this.RaiseAndSetIfChanged(ref project, value);
+        get
+        {
+            return Projects.FirstOrDefault(p => p.Id == stateManager.ActiveProjectId);
+        }
+        set
+        {
+            this.RaisePropertyChanging();
+            stateManager.ActiveProjectId = value?.Id;
+            this.RaisePropertyChanged();
+        }
     }
 
     private ProjectNode? selectedNode;
@@ -140,21 +141,18 @@ public sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
         var input = await textInputDialogService.GetInput("Enter project name:");
         if (!string.IsNullOrEmpty(input))
         {
-            var item = new Project { Id = Guid.NewGuid(), Name = input };
-            Projects.Add(item);
-            Project = item;
+            stateManager.AddProject(input);
+            this.RaisePropertyChanged(nameof(ActiveProject));
         }
-        SaveState();
     }
 
     private async Task OnCreateTopFolder()
     {
         var input = await textInputDialogService.GetInput("Enter folder name:");
-        if (!string.IsNullOrEmpty(input))
+        if (!string.IsNullOrEmpty(input) && ActiveProject is { } p)
         {
-            Project?.Nodes.Add(new FolderNode { Name = input, Parent = null });
+            stateManager.AddFolder(input, p, null);
         }
-        SaveState();
     }
     
     private async Task OnCreateFolder(FolderNode folder)
@@ -162,11 +160,9 @@ public sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
         var input = await textInputDialogService.GetInput("Enter folder name:");
         if (!string.IsNullOrEmpty(input))
         {
-            var child = new FolderNode { Name = input, Parent = folder, };
-            folder.Children.Insert(folder.GetIndex(child), child);
+            var child = stateManager.AddFolder(input, folder.Project, folder);
             nodeCreated.OnNext(child);
         }
-        SaveState();
     }
 
     private async Task OnCreateRequest(FolderNode folder)
@@ -174,19 +170,9 @@ public sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
         var input = await textInputDialogService.GetInput("Enter request name:");
         if (!string.IsNullOrEmpty(input))
         {
-            var child = new RequestNode
-            {
-                Name = input,
-                Parent = folder,
-                Request = RequestInit.Empty with
-                {
-                    Method = TryGuessMethod(input)
-                }
-            };
-            folder.Children.Insert(folder.GetIndex(child), child);
-            nodeCreated.OnNext(child);
+            var request = stateManager.AddRequestNode(input, folder); 
+            nodeCreated.OnNext(request);
         }
-        SaveState();
     }
 
     private async Task OnRenameFolder(FolderNode folder)
@@ -194,33 +180,10 @@ public sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
         var input = await textInputDialogService.GetInput("Enter new name:", folder.Name);
         if (!string.IsNullOrEmpty(input))
         {
-            folder.Name = input;
+            stateManager.ChangeFolderName(folder, input);
         }
-        SaveState();
     }
 
-    private void SaveState()
-    {
-        storageManager.Save(Projects, Project);
-    }
-
-    private HttpMethod TryGuessMethod(string name)
-    {
-        var dictionary = new Dictionary<HttpMethod, List<string>>
-        {
-            [HttpMethod.POST] = new(){ "Create", "Insert" },
-            [HttpMethod.PUT] = new(){ "Update", "Set", "Modify" },
-            [HttpMethod.DELETE] = new(){ "Delete", "Remove" }
-        };
-        foreach (var (key, value) in dictionary)
-        {
-            if (value.Any(v => name.StartsWith(v, StringComparison.OrdinalIgnoreCase)))
-            {
-                return key;
-            }
-        }
-        return HttpMethod.GET;
-    }
 
     public void Dispose()
     {

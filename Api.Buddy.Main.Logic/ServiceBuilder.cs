@@ -12,6 +12,7 @@ public static class ServiceBuilder
         services.AddSingleton<IRequestBuilder, RequestBuilder>();
         services.AddSingleton<IRequestExecutor, RequestExecutor>();
         services.AddSingleton<IStorageManager, StorageManager>();
+        services.AddSingleton<IStateManager, StateManager>();
         return services;
     }
 }

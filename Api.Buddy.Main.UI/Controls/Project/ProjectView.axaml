@@ -44,7 +44,7 @@
                     <TextBlock Classes="icons" Text="add" FontSize="18" FontWeight="Heavy" />
                 </Button>
                 <ComboBox ItemsSource="{Binding Projects}" FontSize="20"
-                          SelectedItem="{Binding Project}"
+                          SelectedItem="{Binding ActiveProject}"
                           HorizontalAlignment="Stretch" Margin="10 5">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -54,7 +54,7 @@
                 </ComboBox>
             </DockPanel>
             <TreeView x:Name="ProjectTree"
-                      ItemsSource="{Binding Project.Nodes}"
+                      ItemsSource="{Binding ActiveProject.Nodes}"
                       SelectedItem="{Binding SelectedNode}"
                       Margin="0 10">
                 <TreeView.DataTemplates>
@@ -98,7 +98,7 @@
                     </TreeDataTemplate>
                     <DataTemplate DataType="project1:RequestNode">
                         <StackPanel Orientation="Horizontal" Spacing="5">
-                            <TextBlock Text="{Binding Request.Method}" Classes="smallText" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding Method}" Classes="smallText" VerticalAlignment="Center" />
                             <TextBlock Text="{Binding Name}" Classes="mediumText" VerticalAlignment="Center" />
                         </StackPanel>
                     </DataTemplate>

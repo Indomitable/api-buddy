@@ -34,7 +34,7 @@ internal sealed class RequestExecutor : IRequestExecutor
             var response = await client.SendAsync(message);
             return response; // TODO: return custom object
         }
-        catch (Exception e)
+        catch (Exception)
         {
             // TODO: create an execution log and how the exception there. 
             return null;

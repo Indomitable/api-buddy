@@ -46,7 +46,7 @@ public class ProjectNodeDataTemplateSelector: IDataTemplate
             Orientation = Orientation.Horizontal,
             Children =
             {
-                new TextBlock { Text = requestNode.Request.Method.ToString() },
+                new TextBlock { Text = requestNode.Method.ToString() },
                 new TextBlock { Text = requestNode.Name }
             }
         };

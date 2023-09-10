@@ -17,7 +17,7 @@
             <Button FontSize="20"
                     Command="{Binding AddHeader}">Add</Button>
         </StackPanel>
-        <DataGrid ItemsSource="{Binding Headers}"
+        <DataGrid ItemsSource="{Binding Request.Headers}"
                   Height="300" RowHeight="50" ColumnHeaderHeight="50"
                   Classes="keyValueDataGrid">
             <DataGrid.Resources>
