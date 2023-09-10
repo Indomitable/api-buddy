@@ -49,11 +49,12 @@ public partial class ProjectView : ReactiveUserControl<ProjectViewModel>
         var treeView = this.GetControl<TreeView>("ProjectTree");
         if (projectNode is { Parent: FolderNode parentNode })
         {
-            var item = treeView.TreeContainerFromItem(parentNode);
-            if (item is TreeViewItem treeViewItem)
+            var parentItem = treeView.TreeContainerFromItem(parentNode);
+            if (parentItem is TreeViewItem parentTreeItem)
             {
-                treeView.ExpandSubTree(treeViewItem);
+                treeView.ExpandSubTree(parentTreeItem);
             }
         }
+        treeView.SelectedItem = projectNode;
     }
 }

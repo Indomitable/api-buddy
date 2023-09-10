@@ -1,6 +1,5 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -116,14 +115,11 @@ public sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
 
     public Project? ActiveProject
     {
-        get
-        {
-            return Projects.FirstOrDefault(p => p.Id == stateManager.ActiveProjectId);
-        }
+        get => stateManager.ActiveProject;
         set
         {
             this.RaisePropertyChanging();
-            stateManager.ActiveProjectId = value?.Id;
+            stateManager.ActiveProject = value;
             this.RaisePropertyChanged();
         }
     }
@@ -151,7 +147,8 @@ public sealed class ProjectViewModel: ReactiveObject, IProjectViewModel
         var input = await textInputDialogService.GetInput("Enter folder name:");
         if (!string.IsNullOrEmpty(input) && ActiveProject is { } p)
         {
-            stateManager.AddFolder(input, p, null);
+            var folder = stateManager.AddFolder(input, p, null);
+            nodeCreated.OnNext(folder);
         }
     }
     

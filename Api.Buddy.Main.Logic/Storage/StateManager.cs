@@ -10,7 +10,7 @@ namespace Api.Buddy.Main.Logic.Storage;
 public interface IStateManager
 {
     IObservable<IChangeSet<Project>> ConnectToProjects();
-    Guid? ActiveProjectId { get; set; }
+    Project? ActiveProject { get; set; }
     
     void UpdateActiveProject(Guid? id);
     void AddProject(string name);
@@ -39,18 +39,18 @@ public class StateManager : ReactiveObject, IStateManager
         var storage = storageManager.Load();
         projects = new SourceList<Project>();
         projects.AddRange(storage.Projects);
-        ActiveProjectId = storage.SelectedProject.HasValue
-            ? storage.Projects.FirstOrDefault(p => p.Id == storage.SelectedProject.Value)?.Id
-            : storage.Projects.FirstOrDefault()?.Id;
+        ActiveProject = storage.SelectedProject.HasValue
+            ? projects.Items.FirstOrDefault(p => p.Id == storage.SelectedProject.Value)
+            : projects.Items.FirstOrDefault();
     }
 
-    private Guid? activeProjectId;
-    public Guid? ActiveProjectId
+    private Project? activeProject;
+    public Project? ActiveProject
     {
-        get => activeProjectId;
+        get => activeProject;
         set
         {
-            this.RaiseAndSetIfChanged(ref activeProjectId, value);
+            this.RaiseAndSetIfChanged(ref activeProject, value);
             UpdateStorage();
         }
     }
@@ -73,7 +73,7 @@ public class StateManager : ReactiveObject, IStateManager
     {
         var item = new Project(Guid.NewGuid(), name);
         projects.Add(item);
-        ActiveProjectId = item.Id;
+        ActiveProject = item;
         UpdateStorage();
     }
     
@@ -137,7 +137,7 @@ public class StateManager : ReactiveObject, IStateManager
 
     private void UpdateStorage()
     {
-        var storage = new Storage(projects.Items, ActiveProjectId);
+        var storage = new Storage(projects.Items, ActiveProject?.Id);
         storageManager.Save(storage);
     }
 
